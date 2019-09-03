@@ -39,6 +39,17 @@ a {
   color: inherit;
   text-decoration: none;
 }
+i{
+  font-style: normal;
+}
+.clearfix:after {
+    visibility: hidden;
+    clear: both;
+    display: block;
+    content: ".";
+    height: 0;
+    line-height: 0;
+}
 </style>>
 
 

@@ -1,7 +1,8 @@
 <template>
   <div>
     <!-- 头部 -->
-    <div class="bar">
+<div class="all">
+      <div class="bar">
       <el-row type="flex" justify="space-between">
         <!-- logo部分 -->
         <div class="logo">
@@ -20,16 +21,19 @@
         </div>
       </el-row>
     </div>
+</div>
   </div>
 </template>
 
 <style lang="less" scoped>
-.bar {
+.all{
+  box-shadow: 0px 3px 0px #f5f5f5;
+  border-bottom: 1px solid #ddd;
+  .bar {
   width: 1000px;
   margin: 0 auto;
   height: 60px;
   line-height: 60px;
-  border-bottom: 1px solid skyblue;
   .logo {
     margin-top:8px;
     img {
@@ -57,6 +61,7 @@
       }
     }
   }
+}
 }
 </style>>
 

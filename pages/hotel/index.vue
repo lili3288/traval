@@ -1,15 +1,18 @@
 <template>
   <div class="index">
-    酒店模块
+    <div class="box"></div>
   </div>
 </template>
 
 <script>
-export default {
-
-}
+export default {};
 </script>
 
-<style>
-
+<style lang="less" scoped>
+.box{
+  width: 100px;
+  height: 100px;
+  background-color: skyblue;
+  transform: rotate(-12deg)
+}
 </style>

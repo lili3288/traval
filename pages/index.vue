@@ -14,7 +14,9 @@
           :key="index"
           @click="change(index)"
           :class="{active:index===current}"
-        >{{item.title}}</span>
+        >
+          <i>{{item.title}}</i>
+        </span>
       </el-row>
 
       <el-row type="flex" class="search-input" justify="space-around ">
@@ -57,8 +59,8 @@ export default {
   methods: {
     change(index) {
       this.current = index;
-      if(index===2){
-        this.$router.push({path:'/user/login'})
+      if (index === 2) {
+        this.$router.push({ path: "/user/login" });
       }
     }
   },
@@ -85,22 +87,50 @@ export default {
   top: 400px;
   z-index: 10;
   .entry {
+    // 搜索词高亮
+    .active {
+      i {
+        color: #333 !important;
+      }
+
+      &::after {
+        background-color: #eeeeee !important;
+      }
+    }
     span {
+      i {
+        position: absolute;
+        z-index: 2;
+        display: block;
+        width: 100%;
+        height: 100%;
+        line-height: 30px;
+        text-align: center;
+        color: #fff;
+      }
+
       width: 82px;
       height: 36px;
-      line-height: 36px;
       display: block;
-      background-color: rgba(0, 0, 0, 0.3);
       text-align: center;
-      color: #fff;
       cursor: pointer;
+      position: relative;
+      margin-right: 8px;
+      &::after {
+        transform: scale(1.1, 1.3) perspective(0.7em) rotateX(2.2deg);
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        display: block;
+        content: "";
+        background-color: rgba(0, 0, 0, 0.3);
+        top: 0;
+        left: 0;
+        transform-origin: bottom left;
+      }
     }
   }
-  // 搜索词高亮
-  .active {
-    background-color: #eeeeee !important;
-    color: #333 !important;
-  }
+
   .search-input {
     width: 500px;
     height: 45px;
@@ -113,8 +143,8 @@ export default {
       width: 85%;
       border: none;
       outline: none;
-      :focus{
-        border:none;
+      :focus {
+        border: none;
       }
     }
     .icon-search {

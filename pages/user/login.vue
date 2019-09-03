@@ -10,13 +10,15 @@
         >{{item}}</span>
       </el-row>
       <!-- 登录表单 -->
-      <Login></Login>
+      <Login v-show="current===0"></Login>
+      <Register v-show="current===1"></Register>
     </div>
   </div>
 </template>
 
 <script>
 import Login from "@/components/user/loginForm";
+import Register from "@/components/user/register";
 export default {
   data() {
     return {
@@ -25,7 +27,11 @@ export default {
     };
   },
   components: {
-    Login
+    Login,
+    Register
+  },
+  mounted() {
+    console.log(this.$store.state);
   }
 };
 </script>
@@ -48,7 +54,7 @@ export default {
         text-align: center;
         line-height: 50px;
       }
-      .active{
+      .active {
         background-color: #fff;
         box-sizing: border-box;
         border-top: 2px solid orange;
