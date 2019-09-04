@@ -31,7 +31,7 @@ export default {
     Register
   },
   mounted() {
-    console.log(this.$store.state);
+    // console.log('123',this.$store.state.user);
   }
 };
 </script>

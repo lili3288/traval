@@ -68,8 +68,8 @@ export default {
     this.$axios({
       url: "/scenics/banners"
     }).then(res => {
-      console.log(res);
-      console.dir(this.$axios);
+      // console.log(res);
+      // console.dir(this.$axios);
       this.banners = res.data.data;
     });
   }

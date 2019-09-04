@@ -1,6 +1,6 @@
 <template>
   <div class="loginForm">
-    <el-form ref="form" :model="loginForm" :rules="rules">
+    <el-form ref="form" :model="loginForm" :rules="rulelogin">
       <el-form-item prop="username">
         <el-input placeholder="用户名/手机" v-model="loginForm.username"></el-input>
       </el-form-item>
@@ -9,7 +9,7 @@
       </el-form-item>
     </el-form>
     <span>忘记密码</span>
-    <el-button type="primary" style="width:100%" @click="onlogin">登录</el-button>
+    <el-button type="primary" style="width:100%" @click.native="onlogin">登录</el-button>
   </div>
 </template>
 
@@ -19,10 +19,10 @@ export default {
     return {
       // 登录表单
       loginForm: {
-        username: "",
-        password: ""
+        username: "13800138000",
+        password: "123456"
       },
-      rules: {
+      rulelogin: {
         username: [
           { required: true, message: "请输入活动名称", trigger: "blur" }
         ],
@@ -35,7 +35,6 @@ export default {
   methods: {
     //   点击登录
     onlogin() {
-     
       this.$refs.form.validate(valid => {
         if (valid) {
           this.$axios({
@@ -44,6 +43,7 @@ export default {
             data: this.loginForm
           }).then(res => {
             if (res.request.status === 200) {
+              this.$store.commit("user/getUserInfo", res.data);
               this.$message.success("登陆成功");
               this.$router.push({ path: "/" });
             }

@@ -1,12 +1,12 @@
 <template>
   <div class="register">
-    <el-form ref="form" :model="registerForm" :rules="rules">
+    <el-form ref="form" :model="registerForm" :rules="rulerest">
       <el-form-item prop="username">
         <el-input placeholder="用户名手机" v-model="registerForm.username"></el-input>
       </el-form-item>
       <el-form-item prop="captcha">
         <el-input placeholder="验证码" v-model="registerForm.captcha">
-          <el-button slot="append" @click="getCode">发送验证码</el-button>
+          <el-button slot="append" @click.native="getCode">发送验证码</el-button>
         </el-input>
       </el-form-item>
       <el-form-item prop="nickname">
@@ -16,10 +16,10 @@
         <el-input placeholder="密码" v-model="registerForm.password"></el-input>
       </el-form-item>
       <el-form-item prop="checkPassword">
-        <el-input placeholder="确认密码" v-model="checkPassword"></el-input>
+        <el-input placeholder="确认密码" v-model="registerForm.checkPassword"></el-input>
       </el-form-item>
 
-      <el-button type="primary" style="width:100%;margin-top:10px;" @click="register">注册</el-button>
+      <el-button type="primary" style="width:100%;margin-top:10px;" @click.native="register">注册</el-button>
     </el-form>
   </div>
 </template>
@@ -27,27 +27,29 @@
 <script>
 export default {
   data() {
-    var validatePass = (rule, value, callback) => {
-        console.log(rule,value)
-      if (!value) {
+    var checkPassword = (rule, value, callback) => {
+      if (value === "") {
         callback(new Error("请再次输入密码"));
       } else if (value !== this.registerForm.password) {
-        callback(new Error("两次密码输入不一样"));
+        callback(new Error("两次输入密码不一致!"));
+      } else {
+        callback();
       }
     };
+
     return {
       // 注册表单
       registerForm: {
         username: "",
         password: "",
         nickname: "",
-        captcha: ""
+        captcha: "",
+        checkPassword: ""
       },
-      //   二次密码
-      checkPassword: "",
+
       //   表单验证
 
-      rules: {
+      rulerest: {
         username: [
           { required: true, message: "请输入用户名手机", trigger: "blur" }
         ],
@@ -56,15 +58,42 @@ export default {
         nickname: [
           { required: true, message: "请输入你的名字", trigger: "blur" }
         ],
-        checkPassword: [{ validator: validatePass, trigger: "blur" }]
+        checkPassword: [{ validator: checkPassword, trigger: "blur" }]
       }
     };
   },
   methods: {
-    getCode() {},
+    getCode() {
+      if(!this.registerForm.username){
+        this.$message.info('请输入手机号')
+        return
+      }
+      this.$axios({
+        url:'/captchas',
+        method:'post',
+        data:{
+          tel:this.registerForm.username
+        }
+      }).then(res=>{
+        console.log(res)
+        this.$message.success('模拟获取验证码'+res.data.code)
+      })
+    },
     //   注册
     register() {
-      console.log(this.checkPassword);
+       this.$refs.form.validate((valid) =>{
+         if(valid){
+           const {checkPassword , ...rest} =this.registerForm
+           this.$axios({
+             url:'/accounts/register',
+             method:'post',
+             data:rest
+           }).then(res=>{
+             console.log(res)
+           })
+         }
+       })
+      console.log(this.registerForm);
     }
   }
 };
