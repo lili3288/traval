@@ -92,7 +92,7 @@ export default {
           { required: true, message: "请输入目的城市", trigger: "blur" }
         ],
         date: [
-          { type: 'date', required: true, message: '请选择时间', trigger: 'change' }
+          // { required: true, message: '请选择时间', trigger: 'change' }
         ]
       }
     };
@@ -170,9 +170,10 @@ export default {
     },
     // 搜索机票
     searchTicket() {
+        console.log( this.tikect)
       this.$refs.ruleForm.validate(valid => {
         if (valid) {
-          console.log(this.tikect)
+          console.log(typeof this.tikect.departDate)
           this.$axios({
             url: "/airs",
             params: this.tikect
