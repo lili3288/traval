@@ -60,7 +60,7 @@ export default {
     change(index) {
       this.current = index;
       if (index === 2) {
-        this.$router.push({ path: "/user/login" });
+        this.$router.push({ path: "/air" });
       }
     }
   },
@@ -153,5 +153,8 @@ export default {
       line-height: 45px;
     }
   }
+}
+.index{
+  min-width: 1000px;
 }
 </style>

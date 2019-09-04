@@ -19,7 +19,7 @@
         <el-input placeholder="确认密码" v-model="registerForm.checkPassword"></el-input>
       </el-form-item>
 
-      <el-button type="primary" style="width:100%;margin-top:10px;" @click.native="register">注册</el-button>
+      <el-button type="primary" style="width:100%;margin-top:10px;" @click="register">注册</el-button>
     </el-form>
   </div>
 </template>
@@ -90,6 +90,11 @@ export default {
              data:rest
            }).then(res=>{
              console.log(res)
+             if(res.request.status===200){
+               this.$message.success('注册成功')
+               this.$store.commit('user/getUserInfo',res.data)
+               this.$router.push('/')
+             }
            })
          }
        })

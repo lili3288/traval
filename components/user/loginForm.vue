@@ -9,7 +9,7 @@
       </el-form-item>
     </el-form>
     <span>忘记密码</span>
-    <el-button type="primary" style="width:100%" @click.native="onlogin">登录</el-button>
+    <el-button type="primary" style="width:100%" @click="onlogin">登录</el-button>
   </div>
 </template>
 
@@ -35,6 +35,7 @@ export default {
   methods: {
     //   点击登录
     onlogin() {
+      console.log(123)
       this.$refs.form.validate(valid => {
         if (valid) {
           this.$axios({

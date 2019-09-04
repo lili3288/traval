@@ -28,7 +28,6 @@ export default {
     this.$axios({
       url: "/airs/sale"
     }).then(res => {
-      console.log(res);
       if (res.request.status === 200) {
         this.ticket = res.data.data;
       }

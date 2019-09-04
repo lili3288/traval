@@ -4,7 +4,7 @@
       <i class="iconfont iconfeiji"></i>
       <span>国内机票</span>
     </div>
-    <div class="main clearfix" >
+    <div class="main clearfix">
       <!-- 选择出发地 -->
       <el-col :gutter="20">
         <el-col :span="8">
@@ -14,28 +14,41 @@
               <span v-for="(item,index) in ['单程','往返']" :key="index">{{item}}</span>
             </el-row>
             <!-- 选择出发和目的地 -->
-            <el-form :model="tikect" ref="ruleForm" label-width="80px" class="demo-ruleForm tikect">
+            <el-form
+              :model="tikect"
+              ref="ruleForm"
+              :rules="rules"
+              label-width="80px"
+              class="demo-ruleForm tikect"
+            >
               <!-- 切换地点 -->
               <div class="changeAdress" @click="changeAdress">
                 <span>换</span>
               </div>
-              <el-form-item label="出发城市" prop="name">
+              <el-form-item label="出发城市" prop="departCity">
                 <el-autocomplete
                   v-model="tikect.departCity"
                   :fetch-suggestions="querySearch"
                   placeholder="请搜索出发城市"
+                  @select="handlecity"
                 ></el-autocomplete>
               </el-form-item>
-              <el-form-item label="到达城市" prop="name">
-                <el-input v-model="tikect.arrive" placeholder="请搜索到达城市"></el-input>
+              <el-form-item label="到达城市" prop="destCity">
+                <el-autocomplete
+                  v-model="tikect.destCity"
+                  :fetch-suggestions="querySearch2"
+                  placeholder="请搜索到达城市"
+                  @select="handleArrivecity"
+                ></el-autocomplete>
               </el-form-item>
-              <el-form-item label="出发时间" prop="name">
+              <el-form-item label="出发时间" prop="date">
                 <el-date-picker
-                  v-model="tikect.date"
-                  type="datetime"
+                  v-model="tikect.departDate"
+                  type="date"
                   placeholder="选择日期时间"
-                  default-time="12:00:00"
                   style="width:100%"
+                  format="yyyy 年 MM 月 dd 日"
+                  value-format="yyyy-MM-dd"
                 ></el-date-picker>
               </el-form-item>
               <el-form-item>
@@ -61,34 +74,120 @@ export default {
   data() {
     return {
       tikect: {
-        departCity: "",
-        arrive: "",
-        date: ""
+        departCity: "北京 ", //出发城市
+        departCode: "", //出发城市代码
+        destCity: "上海", //目标城市
+        destCode: "", //目标城市代码
+        departDate: "" //日期
+      },
+      // 存放匹配到的出发城市列表
+      startCity: [],
+      // 存放匹配到的到达城市列表
+      arrivetCity: [],
+      rules: {
+        departCity: [
+          { required: true, message: "请输入出发城市", trigger: "blur" }
+        ],
+        destCity: [
+          { required: true, message: "请输入目的城市", trigger: "blur" }
+        ],
+        date: [
+          { type: 'date', required: true, message: '请选择时间', trigger: 'change' }
+        ]
       }
     };
   },
   methods: {
-    //   选择未完成
+    //   输入匹配城市
     querySearch(value, cb) {
-      var arr = [{ value: "广州" }, { value: "北京" }, { value: "上海" }];
-      let city = [];
-      arr.forEach(e => {
-        if (e.value.indexOf(value) !== -1) {
-          city.push(e.value);
+      this.$axios({
+        url: `/airs/city?name=${value}`
+      }).then(res => {
+        console.log(res);
+        if (res.request.status === 200) {
+          // 得到匹配到的城市列表
+          let data = res.data.data;
+          this.startCity = data;
+          let arr = [];
+          data.forEach(e => {
+            arr.push({ value: e.name });
+          });
+          cb(arr);
+        }
+      });
+    },
+    querySearch2(value, cb) {
+      this.$axios({
+        url: `/airs/city?name=${value}`
+      }).then(res => {
+        console.log(res);
+        if (res.request.status === 200) {
+          // 得到匹配到的城市列表
+          let data = res.data.data;
+          this.arrivetCity = data;
+          let arr = [];
+          data.forEach(e => {
+            arr.push({ value: e.name });
+          });
+          cb(arr);
+        }
+      });
+    },
+    // 选择出发城市
+    handlecity(data) {
+      let city = "";
+      this.startCity.forEach(e => {
+        if (e.name == data.value) {
+          console.log(e.name == data.value);
+          console.log(e.sort);
+          city = e.sort;
         }
       });
       console.log(city);
-      cb(city);
+      this.tikect.departCode = city;
+    },
+    // 选择到达城市
+    handleArrivecity(data) {
+      let city = "";
+      this.arrivetCity.forEach(e => {
+        if (e.name == data.value) {
+          console.log(e.name == data.value);
+          console.log(e.sort);
+          city = e.sort;
+        }
+      });
+      console.log("到达" + city);
+      this.tikect.destCode = city;
     },
     // 切换出发到达城市
     changeAdress() {
       const other = this.tikect.departCity;
-      this.tikect.departCity = this.tikect.arrive;
-      this.tikect.arrive = other;
+      this.tikect.departCity = this.tikect.destCity;
+      this.tikect.destCity = other;
+      const code = this.tikect.departCode;
+      this.tikect.departCode = this.tikect.destCode;
+      this.destCode = code;
     },
     // 搜索机票
     searchTicket() {
-      console.log(this.tikect);
+      this.$refs.ruleForm.validate(valid => {
+        if (valid) {
+          console.log(this.tikect)
+          this.$axios({
+            url: "/airs",
+            params: this.tikect
+          }).then(res => {
+            console.log(res);
+          });
+          if (this.tikect.destCode === "" || this.tikect.departCode === "") {
+            this.$message.info("出发或到达城市不存在，请在下拉列表选择城市");
+            return;
+          }
+          this.$router.push({ path: "/air/flights", query: this.tikect });
+        } else {
+          this.$message.info("请正确填写必填项");
+        }
+      });
     }
   }
 };
@@ -146,12 +245,12 @@ export default {
         }
       }
     }
-    .advert{
-        float: right;
-        img{
-            height: 100%;
-            vertical-align:middle;
-        }
+    .advert {
+      float: right;
+      img {
+        height: 100%;
+        vertical-align: middle;
+      }
     }
   }
 }

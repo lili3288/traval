@@ -6,7 +6,9 @@
         <el-row type="flex" justify="space-between">
           <!-- logo部分 -->
           <div class="logo">
-            <img src="http://157.122.54.189:9093/images/logo.jpg" alt />
+            <router-link to="/">
+              <img src="http://157.122.54.189:9093/images/logo.jpg" alt />
+            </router-link>
           </div>
           <!-- 导航部分 -->
           <el-row class="navs" type="flex" flex="1">
@@ -15,6 +17,20 @@
             <nuxt-link to="/hotel">酒店</nuxt-link>
             <nuxt-link to="/air">国内机票</nuxt-link>
           </el-row>
+          <div class="new" style="margin-right:20px;">
+            <el-dropdown>
+              <span class="el-dropdown-link">
+                <i class="el-icon-bell el-icon--right"></i>
+                消息
+                <i class="el-icon-caret-bottom el-icon--right"></i>
+              </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item>
+                  <router-link to="/#">消息</router-link>
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </div>
           <!-- 登录注册部分 -->
           <div class="login" v-if="!$store.state.user.userInfo.token">
             <nuxt-link to="/user/login">登录 / 注册</nuxt-link>
@@ -27,10 +43,12 @@
                   alt
                 />
                 <span>{{$store.state.user.userInfo.user.nickname}}</span>
-                <i class="el-icon-arrow-down el-icon--right"></i>
+                <i class="el-icon-caret-bottom el-icon--right"></i>
               </span>
               <el-dropdown-menu slot="dropdown" style="width:150px;">
-                <el-dropdown-item>个人中心</el-dropdown-item>
+                <el-dropdown-item>
+                  <router-link to="/user/personal">个人中心</router-link>
+                </el-dropdown-item>
                 <el-dropdown-item @click.native="clearToken">退出</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
