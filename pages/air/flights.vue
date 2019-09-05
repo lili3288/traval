@@ -1,6 +1,6 @@
 <template>
   <div class="flights">
-    <el-row type="flex">
+    <el-row type="flex" :gutter="20">
       <el-col :span="18" class="left">
         <div class="title">
           <el-row type="flex">
@@ -53,7 +53,7 @@
       <el-col :span="6">
         <!-- 保障和历史记录 -->
         <div class="promise">
-          <el-row type="flex" justify="space-around">
+          <el-row type="flex" justify="space-around" class="demon">
             <div class="iconThres">
               <i class="iconfont iconweibiaoti-_huabanfuben"></i>
               <span>航协认证</span>
@@ -67,6 +67,59 @@
               <span>7x24</span>
             </div>
           </el-row>
+          <span>免费客服电话：4006345678转2</span>
+        </div>
+        <div class="history">
+          <div class="title">
+            <span>历史查询</span>
+          </div>
+          <div class="content">
+           <el-row type="flex" class="content-list">
+             <el-col :span="18" class="adress">
+               <p>广州 - 北京</p>
+               <span>2019-02-12</span>
+             </el-col>
+             <el-col :span="6" class="select">
+               <span>选择</span>
+             </el-col>
+           </el-row>
+           <el-row type="flex" class="content-list">
+             <el-col :span="18" class="adress">
+               <p>广州 - 北京</p>
+               <span>2019-02-12</span>
+             </el-col>
+             <el-col :span="6" class="select">
+               <span>选择</span>
+             </el-col>
+           </el-row>
+           <el-row type="flex" class="content-list">
+             <el-col :span="18" class="adress">
+               <p>广州 - 北京</p>
+               <span>2019-02-12</span>
+             </el-col>
+             <el-col :span="6" class="select">
+               <span>选择</span>
+             </el-col>
+           </el-row>
+           <el-row type="flex" class="content-list">
+             <el-col :span="18" class="adress">
+               <p>广州 - 北京</p>
+               <span>2019-02-12</span>
+             </el-col>
+             <el-col :span="6" class="select">
+               <span>选择</span>
+             </el-col>
+           </el-row>
+           <el-row type="flex" class="content-list">
+             <el-col :span="18" class="adress">
+               <p>广州 - 北京</p>
+               <span>2019-02-12</span>
+             </el-col>
+             <el-col :span="6" class="select">
+               <span>选择</span>
+             </el-col>
+           </el-row>
+          </div>
         </div>
       </el-col>
     </el-row>
@@ -154,25 +207,80 @@ export default {
   }
   .promise {
     border: 1px solid #eee;
-    .iconThres {
-      flex: 1;
-     
-      text-align: center;
-      i {
-        width: 40px;
-        height: 42px;
-        display: block;
-        font-size: 40px;
-        color: #409eff;
-        margin: 0 auto;
-      }
-      &:nth-child(2) {
+
+    .demon {
+      padding: 10px 0;
+      .iconThres {
+        flex: 1;
+
+        text-align: center;
         i {
-          color: green;
+          width: 40px;
+          height: 42px;
+          display: block;
+          font-size: 40px;
+          color: #409eff;
+          margin: 0 auto;
+        }
+        &:nth-child(2) {
+          i {
+            color: green;
+          }
+        }
+        span {
+          font-size: 12px;
         }
       }
-      span{
-        font-size: 12px;
+    }
+
+    > span {
+      width: 100%;
+      height: 32px;
+      line-height: 32px;
+      padding: 0 10px;
+      box-sizing: border-box;
+      display: block;
+      font-size: 14px;
+      background-color: #f6f6f6;
+    }
+  }
+  .history{
+    margin-top: 10px;
+    border: 1px solid #eee;
+    padding: 0 10px;
+    align-items: center;
+    .title{
+      border-bottom: 1px solid #eee;
+      padding: 10px 0;
+      font-size: 16px;
+    }
+    .content{
+      .content-list{
+        padding: 10px 0;
+           align-items: center;
+        .adress{
+          p{
+            font-size: 14px;
+          }
+          span{
+            font-size: 12px;
+            color: #666;
+          }
+        }
+        .select{
+             
+          span{
+      border-radius: 5px;
+            display: block;
+            width: 45px;
+            height: 20px;
+            font-size: 12px;
+            text-align: center;
+            line-height: 20px;
+            background-color: orange;
+            color: #fff;
+          }
+        }
       }
     }
   }
