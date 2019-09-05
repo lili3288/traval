@@ -123,7 +123,6 @@ export default {
         if (res.request.status === 200) {
           // 得到匹配到的城市列表
           let data = res.data.data;
-
           data.forEach(e => {
             e.value = e.name;
           });

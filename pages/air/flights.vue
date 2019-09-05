@@ -1,7 +1,7 @@
 <template>
   <div class="flights">
     <el-row type="flex">
-      <el-col :span="20" class="left">
+      <el-col :span="18" class="left">
         <div class="title">
           <el-row type="flex">
             <div class="adress">
@@ -48,9 +48,27 @@
             <span>撤销</span>
           </div>
         </div>
-        <ticket :resdata='airTicket' v-if="airTicket.length>0"></ticket>
+        <ticket :resdata="airTicket" v-if="airTicket.length>0"></ticket>
       </el-col>
-      <el-col :span="4">1</el-col>
+      <el-col :span="6">
+        <!-- 保障和历史记录 -->
+        <div class="promise">
+          <el-row type="flex" justify="space-around">
+            <div class="iconThres">
+              <i class="iconfont iconweibiaoti-_huabanfuben"></i>
+              <span>航协认证</span>
+            </div>
+            <div class="iconThres">
+              <i class="iconfont iconbaozheng"></i>
+              <span>出行保证</span>
+            </div>
+            <div class="iconThres">
+              <i class="iconfont icondianhua"></i>
+              <span>7x24</span>
+            </div>
+          </el-row>
+        </div>
+      </el-col>
     </el-row>
   </div>
 </template>
@@ -69,7 +87,7 @@ export default {
         company: "",
         volume: ""
       },
-      airTicket:[]
+      airTicket: []
     };
   },
   mounted() {
@@ -78,13 +96,12 @@ export default {
       url: "/airs",
       params: query
     }).then(res => {
-      console.log(res)
+      console.log(res);
       if (res.request.status === 200) {
-
-        this.airTicket=res.data.flights
-        console.log(123,this.airTicket)
-console.log(this.airTicket.flights.length,123)
-this.selectAir = res.data.options;
+        this.airTicket = res.data.flights;
+        console.log(123, this.airTicket);
+        console.log(this.airTicket.flights.length, 123);
+        this.selectAir = res.data.options;
       }
     });
   },
@@ -132,6 +149,30 @@ this.selectAir = res.data.options;
       .select {
         flex: 1;
         width: 100%;
+      }
+    }
+  }
+  .promise {
+    border: 1px solid #eee;
+    .iconThres {
+      flex: 1;
+     
+      text-align: center;
+      i {
+        width: 40px;
+        height: 42px;
+        display: block;
+        font-size: 40px;
+        color: #409eff;
+        margin: 0 auto;
+      }
+      &:nth-child(2) {
+        i {
+          color: green;
+        }
+      }
+      span{
+        font-size: 12px;
       }
     }
   }
