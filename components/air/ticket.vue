@@ -65,7 +65,7 @@
         <template slot-scope="scope">
           <div class="price">
             &yen;
-            <span>{{scope.row.base_price}}</span>起
+            <span>{{scope.row.base_price}}{{scope.row.plane_size}}</span>起
           </div>
         </template>
       </el-table-column>
@@ -81,9 +81,14 @@ export default {
       ticket: []
     };
   },
+  watch: {
+    resdata(newvalue, old) {
+      console.log(newvalue, old);
+      this.ticket=newvalue
+    }
+  },
   mounted() {
     this.ticket = this.resdata;
-    console.log(456, this.ticket);
   },
   methods: {
     // 合并列
@@ -111,14 +116,14 @@ export default {
       }
     },
     // 确认机票
-    comfirmAri(id,eid){
+    comfirmAri(id, eid) {
       this.$router.push({
-        path:'/air/order',
-        query:{
+        path: "/air/order",
+        query: {
           id,
-          seat_xid:eid
+          seat_xid: eid
         }
-      })
+      });
     }
   },
   filters: {

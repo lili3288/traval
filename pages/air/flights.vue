@@ -5,11 +5,11 @@
         <div class="title">
           <el-row type="flex">
             <div class="adress">
-              <span>单程：广州-上海/2019-02-03</span>
-              <!-- <span>{{airTicket.infos.departCity}}</span> -->
+             
+              <span>单程：{{query.departCity+' - '+query.destCity+'/'+query.departDate}}</span>
             </div>
             <div class="select">
-              <el-select v-model="air.airport" placeholder="起飞机场" size="mini">
+              <el-select v-model="air.airport" placeholder="起飞机场" size="mini"  @change="selectCompany">
                 <el-option
                   v-for="(item,index) in selectAir.airport"
                   :key="index"
@@ -25,7 +25,12 @@
                   :value="index"
                 ></el-option>
               </el-select>
-              <el-select v-model="air.company" placeholder="航空公司" size="mini">
+              <el-select
+                v-model="air.company"
+                placeholder="航空公司"
+                size="mini"
+                @change="selectCompany"
+              >
                 <el-option
                   v-for="(item,index) in selectAir.company"
                   :key="index"
@@ -33,22 +38,23 @@
                   :value="item"
                 ></el-option>
               </el-select>
-              <el-select v-model="air.volume" placeholder="机型" size="mini">
+              <el-select v-model="air.volume" placeholder="机型" size="mini"  @change="selectCompany">
                 <el-option
-                  v-for="(item,index) in ['大','中','小']"
+                  v-for="(item,index) in [{value:'大',
+                  size:'L'},{value:'中', size:'M'},{value:'小', size:'S'}]"
                   :key="index"
-                  :label="item"
-                  :value="item"
+                  :label="item.value"
+                  :value="item.size"
                 ></el-option>
               </el-select>
             </div>
           </el-row>
           <div class="cancel">
             筛选：
-            <span>撤销</span>
+            <span @click="clearSelect">撤销</span>
           </div>
         </div>
-        <ticket :resdata="airTicket" v-if="airTicket.length>0"></ticket>
+        <ticket :resdata="sonlist" v-if="sonlist.length>0"></ticket>
       </el-col>
       <el-col :span="6">
         <!-- 保障和历史记录 -->
@@ -74,51 +80,51 @@
             <span>历史查询</span>
           </div>
           <div class="content">
-           <el-row type="flex" class="content-list">
-             <el-col :span="18" class="adress">
-               <p>广州 - 北京</p>
-               <span>2019-02-12</span>
-             </el-col>
-             <el-col :span="6" class="select">
-               <span>选择</span>
-             </el-col>
-           </el-row>
-           <el-row type="flex" class="content-list">
-             <el-col :span="18" class="adress">
-               <p>广州 - 北京</p>
-               <span>2019-02-12</span>
-             </el-col>
-             <el-col :span="6" class="select">
-               <span>选择</span>
-             </el-col>
-           </el-row>
-           <el-row type="flex" class="content-list">
-             <el-col :span="18" class="adress">
-               <p>广州 - 北京</p>
-               <span>2019-02-12</span>
-             </el-col>
-             <el-col :span="6" class="select">
-               <span>选择</span>
-             </el-col>
-           </el-row>
-           <el-row type="flex" class="content-list">
-             <el-col :span="18" class="adress">
-               <p>广州 - 北京</p>
-               <span>2019-02-12</span>
-             </el-col>
-             <el-col :span="6" class="select">
-               <span>选择</span>
-             </el-col>
-           </el-row>
-           <el-row type="flex" class="content-list">
-             <el-col :span="18" class="adress">
-               <p>广州 - 北京</p>
-               <span>2019-02-12</span>
-             </el-col>
-             <el-col :span="6" class="select">
-               <span>选择</span>
-             </el-col>
-           </el-row>
+            <el-row type="flex" class="content-list">
+              <el-col :span="18" class="adress">
+                <p>广州 - 北京</p>
+                <span>2019-02-12</span>
+              </el-col>
+              <el-col :span="6" class="select">
+                <span>选择</span>
+              </el-col>
+            </el-row>
+            <el-row type="flex" class="content-list">
+              <el-col :span="18" class="adress">
+                <p>广州 - 北京</p>
+                <span>2019-02-12</span>
+              </el-col>
+              <el-col :span="6" class="select">
+                <span>选择</span>
+              </el-col>
+            </el-row>
+            <el-row type="flex" class="content-list">
+              <el-col :span="18" class="adress">
+                <p>广州 - 北京</p>
+                <span>2019-02-12</span>
+              </el-col>
+              <el-col :span="6" class="select">
+                <span>选择</span>
+              </el-col>
+            </el-row>
+            <el-row type="flex" class="content-list">
+              <el-col :span="18" class="adress">
+                <p>广州 - 北京</p>
+                <span>2019-02-12</span>
+              </el-col>
+              <el-col :span="6" class="select">
+                <span>选择</span>
+              </el-col>
+            </el-row>
+            <el-row type="flex" class="content-list">
+              <el-col :span="18" class="adress">
+                <p>广州 - 北京</p>
+                <span>2019-02-12</span>
+              </el-col>
+              <el-col :span="6" class="select">
+                <span>选择</span>
+              </el-col>
+            </el-row>
           </div>
         </div>
       </el-col>
@@ -140,26 +146,75 @@ export default {
         company: "",
         volume: ""
       },
-      airTicket: []
+      // 机票列表
+      airTicket: [],
+      // 传递给列表组件的数据
+      sonlist: [],
+      query:[]
     };
   },
   mounted() {
-    let query = this.$route.query;
+    this.query = this.$route.query;
+    
     this.$axios({
       url: "/airs",
-      params: query
+      params: this.query
     }).then(res => {
-      console.log(res);
       if (res.request.status === 200) {
         this.airTicket = res.data.flights;
-        console.log(123, this.airTicket);
-        console.log(this.airTicket.flights.length, 123);
         this.selectAir = res.data.options;
+        this.sonlist = res.data.flights;
+        console.log(this.airTicket)
       }
     });
   },
   components: {
     ticket
+  },
+  methods: {
+    // 筛选机场
+
+    // 筛选航空公司
+    // selectCompany(name) {
+    //   console.log(this.air.company);
+
+    //   let arr = [];
+    //   this.airTicket.forEach(e => {
+    //     if (e.airline_name === name) {
+    //       arr.push(e);
+    //     }
+    //   });
+    //   console.log(this.airTicket);
+    //   console.log(arr);
+    //   this.sonlist = arr;
+    //   console.log(this.airTicket);
+    // }
+    // 筛选航空公司
+    selectCompany() {
+      console.log(this.airTicket);
+      console.log(this.air);
+      const { airport, flightTimes, company, volume } = this.air;
+      // airport: "",
+      // flightTimes: "",
+      // company: "",
+      // volume: ""
+      let arr = [];
+      this.airTicket.forEach(e => {
+        if (e.airline_name === company || company === "") {
+          if (e.org_airport_name === airport || airport === "") {
+            if(e.plane_size===volume||volume===''){
+              arr.push(e)
+            }
+          }
+        }
+      })
+      this.sonlist=arr
+    },
+    // 清空筛选
+    clearSelect(){
+      this.air=[];
+      this.sonlist=this.airTicket
+    }
   }
 };
 </script>
@@ -244,33 +299,32 @@ export default {
       background-color: #f6f6f6;
     }
   }
-  .history{
+  .history {
     margin-top: 10px;
     border: 1px solid #eee;
     padding: 0 10px;
     align-items: center;
-    .title{
+    .title {
       border-bottom: 1px solid #eee;
       padding: 10px 0;
       font-size: 16px;
     }
-    .content{
-      .content-list{
+    .content {
+      .content-list {
         padding: 10px 0;
-           align-items: center;
-        .adress{
-          p{
+        align-items: center;
+        .adress {
+          p {
             font-size: 14px;
           }
-          span{
+          span {
             font-size: 12px;
             color: #666;
           }
         }
-        .select{
-             
-          span{
-      border-radius: 5px;
+        .select {
+          span {
+            border-radius: 5px;
             display: block;
             width: 45px;
             height: 20px;

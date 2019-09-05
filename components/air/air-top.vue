@@ -108,8 +108,8 @@ export default {
           let data = res.data.data;
 
           data.forEach(e => {
-            // arr.push({ value: e.name });
-            e.value = e.name;
+           e.value = e.name.replace('市','');
+         
           });
           this.startCity = data;
           cb(data);
@@ -124,7 +124,8 @@ export default {
           // 得到匹配到的城市列表
           let data = res.data.data;
           data.forEach(e => {
-            e.value = e.name;
+           
+            e.value = e.name.replace('市','');
           });
           this.arrivetCity = data;
           cb(data);
