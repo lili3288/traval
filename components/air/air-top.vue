@@ -103,16 +103,16 @@ export default {
       this.$axios({
         url: `/airs/city?name=${value}`
       }).then(res => {
-        console.log(res);
         if (res.request.status === 200) {
           // 得到匹配到的城市列表
           let data = res.data.data;
-          this.startCity = data;
-          let arr = [];
+
           data.forEach(e => {
-            arr.push({ value: e.name });
+            // arr.push({ value: e.name });
+            e.value = e.name;
           });
-          cb(arr);
+          this.startCity = data;
+          cb(data);
         }
       });
     },
@@ -120,44 +120,26 @@ export default {
       this.$axios({
         url: `/airs/city?name=${value}`
       }).then(res => {
-        console.log(res);
         if (res.request.status === 200) {
           // 得到匹配到的城市列表
           let data = res.data.data;
-          this.arrivetCity = data;
-          let arr = [];
+
           data.forEach(e => {
-            arr.push({ value: e.name });
+            e.value = e.name;
           });
-          cb(arr);
+          this.arrivetCity = data;
+          cb(data);
         }
       });
     },
     // 选择出发城市
     handlecity(data) {
-      let city = "";
-      this.startCity.forEach(e => {
-        if (e.name == data.value) {
-          console.log(e.name == data.value);
-          console.log(e.sort);
-          city = e.sort;
-        }
-      });
-      console.log(city);
-      this.tikect.departCode = city;
+      console.log(123, data);
+      this.tikect.departCode = data.sort;
     },
     // 选择到达城市
     handleArrivecity(data) {
-      let city = "";
-      this.arrivetCity.forEach(e => {
-        if (e.name == data.value) {
-          console.log(e.name == data.value);
-          console.log(e.sort);
-          city = e.sort;
-        }
-      });
-      console.log("到达" + city);
-      this.tikect.destCode = city;
+      this.tikect.destCode = data.sort;
     },
     // 切换出发到达城市
     changeAdress() {
@@ -170,10 +152,10 @@ export default {
     },
     // 搜索机票
     searchTicket() {
-        console.log( this.tikect)
+      console.log(this.tikect);
       this.$refs.ruleForm.validate(valid => {
         if (valid) {
-          console.log(typeof this.tikect.departDate)
+          console.log(typeof this.tikect.departDate);
           this.$axios({
             url: "/airs",
             params: this.tikect

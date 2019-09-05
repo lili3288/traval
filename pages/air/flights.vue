@@ -6,6 +6,7 @@
           <el-row type="flex">
             <div class="adress">
               <span>单程：广州-上海/2019-02-03</span>
+              <!-- <span>{{airTicket.infos.departCity}}</span> -->
             </div>
             <div class="select">
               <el-select v-model="air.airport" placeholder="起飞机场" size="mini">
@@ -77,11 +78,13 @@ export default {
       url: "/airs",
       params: query
     }).then(res => {
+      console.log(res)
       if (res.request.status === 200) {
 
         this.airTicket=res.data.flights
-        console.log(this.airTicket)
-        this.selectAir = res.data.options;
+        console.log(123,this.airTicket)
+console.log(this.airTicket.flights.length,123)
+this.selectAir = res.data.options;
       }
     });
   },
