@@ -47,7 +47,7 @@
             <span>撤销</span>
           </div>
         </div>
-<ticket></ticket>
+        <ticket :resdata='airTicket' v-if="airTicket.length>0"></ticket>
       </el-col>
       <el-col :span="4">1</el-col>
     </el-row>
@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import ticket from '@/components/air/ticket'
+import ticket from "@/components/air/ticket";
 export default {
   data() {
     return {
@@ -67,23 +67,25 @@ export default {
         flightTimes: "",
         company: "",
         volume: ""
-      }
+      },
+      airTicket:[]
     };
   },
   mounted() {
     let query = this.$route.query;
-    console.log(query);
     this.$axios({
       url: "/airs",
       params: query
     }).then(res => {
-      console.log(res);
       if (res.request.status === 200) {
+
+        this.airTicket=res.data.flights
+        console.log(this.airTicket)
         this.selectAir = res.data.options;
       }
     });
   },
-  components:{
+  components: {
     ticket
   }
 };
@@ -109,8 +111,8 @@ export default {
           border: 1px solid #409eff;
           border-radius: 20px;
           cursor: pointer;
-          &:hover{
-            background-color:#409eff;
+          &:hover {
+            background-color: #409eff;
             color: #fff;
           }
         }
