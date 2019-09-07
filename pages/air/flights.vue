@@ -5,11 +5,15 @@
         <div class="title">
           <el-row type="flex">
             <div class="adress">
-             
               <span>单程：{{query.departCity+' - '+query.destCity+'/'+query.departDate}}</span>
             </div>
             <div class="select">
-              <el-select v-model="air.airport" placeholder="起飞机场" size="mini"  @change="selectCompany">
+              <el-select
+                v-model="air.airport"
+                placeholder="起飞机场"
+                size="mini"
+                @change="selectCompany"
+              >
                 <el-option
                   v-for="(item,index) in selectAir.airport"
                   :key="index"
@@ -38,7 +42,7 @@
                   :value="item"
                 ></el-option>
               </el-select>
-              <el-select v-model="air.volume" placeholder="机型" size="mini"  @change="selectCompany">
+              <el-select v-model="air.volume" placeholder="机型" size="mini" @change="selectCompany">
                 <el-option
                   v-for="(item,index) in [{value:'大',
                   size:'L'},{value:'中', size:'M'},{value:'小', size:'S'}]"
@@ -80,49 +84,22 @@
             <span>历史查询</span>
           </div>
           <div class="content">
-            <el-row type="flex" class="content-list">
+            <el-row
+              type="flex"
+              class="content-list"
+              v-for="(item,index) in $store.state.air.cityInfo"
+              :key="index"
+            >
               <el-col :span="18" class="adress">
-                <p>广州 - 北京</p>
-                <span>2019-02-12</span>
+                <p>{{item.departCity+' - '+item.destCity}}</p>
+                <span>{{item.departDate}}</span>
               </el-col>
               <el-col :span="6" class="select">
-                <span>选择</span>
-              </el-col>
-            </el-row>
-            <el-row type="flex" class="content-list">
-              <el-col :span="18" class="adress">
-                <p>广州 - 北京</p>
-                <span>2019-02-12</span>
-              </el-col>
-              <el-col :span="6" class="select">
-                <span>选择</span>
-              </el-col>
-            </el-row>
-            <el-row type="flex" class="content-list">
-              <el-col :span="18" class="adress">
-                <p>广州 - 北京</p>
-                <span>2019-02-12</span>
-              </el-col>
-              <el-col :span="6" class="select">
-                <span>选择</span>
-              </el-col>
-            </el-row>
-            <el-row type="flex" class="content-list">
-              <el-col :span="18" class="adress">
-                <p>广州 - 北京</p>
-                <span>2019-02-12</span>
-              </el-col>
-              <el-col :span="6" class="select">
-                <span>选择</span>
-              </el-col>
-            </el-row>
-            <el-row type="flex" class="content-list">
-              <el-col :span="18" class="adress">
-                <p>广州 - 北京</p>
-                <span>2019-02-12</span>
-              </el-col>
-              <el-col :span="6" class="select">
-                <span>选择</span>
+                <nuxt-link
+                  :to="`/air/flights?departCity=${item.departCity}&departCode=${item.departCode}&destCity=${item.destCity}&destCode=${item.destCode}&departDate=${item.departDate}`"
+                >
+                  <span>选择</span>
+                </nuxt-link>
               </el-col>
             </el-row>
           </div>
@@ -150,28 +127,37 @@ export default {
       airTicket: [],
       // 传递给列表组件的数据
       sonlist: [],
-      query:[]
+      query: [],
+      // 历史记录
+      cityInfo: []
     };
   },
   mounted() {
-    this.query = this.$route.query;
-    
-    this.$axios({
-      url: "/airs",
-      params: this.query
-    }).then(res => {
-      if (res.request.status === 200) {
-        this.airTicket = res.data.flights;
-        this.selectAir = res.data.options;
-        this.sonlist = res.data.flights;
-        console.log(this.airTicket)
-      }
-    });
+    this.cityInfo = [...this.$store.state.air.cityInfo];
+    this.init();
+  },
+  watch: {
+    $route() {
+      this.init();
+    }
   },
   components: {
     ticket
   },
   methods: {
+    init() {
+      this.query = this.$route.query;
+      this.$axios({
+        url: "/airs",
+        params: this.query
+      }).then(res => {
+        if (res.request.status === 200) {
+          this.airTicket = res.data.flights;
+          this.selectAir = res.data.options;
+          this.sonlist = res.data.flights;
+        }
+      });
+    },
     // 筛选机场
 
     // 筛选航空公司
@@ -191,8 +177,6 @@ export default {
     // }
     // 筛选航空公司
     selectCompany() {
-      console.log(this.airTicket);
-      console.log(this.air);
       const { airport, flightTimes, company, volume } = this.air;
       // airport: "",
       // flightTimes: "",
@@ -202,18 +186,23 @@ export default {
       this.airTicket.forEach(e => {
         if (e.airline_name === company || company === "") {
           if (e.org_airport_name === airport || airport === "") {
-            if(e.plane_size===volume||volume===''){
-              arr.push(e)
+            if (e.plane_size === volume || volume === "") {
+              arr.push(e);
             }
           }
         }
-      })
-      this.sonlist=arr
+      });
+      this.sonlist = arr;
     },
     // 清空筛选
-    clearSelect(){
-      this.air=[];
-      this.sonlist=this.airTicket
+    clearSelect() {
+      this.air = {
+        airport: "",
+        flightTimes: "",
+        company: "",
+        volume: ""
+      }
+      this.sonlist = this.airTicket;
     }
   }
 };

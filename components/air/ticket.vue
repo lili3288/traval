@@ -1,13 +1,17 @@
 <template>
   <div class="ticket">
     <el-table
-      :data="ticket"
+      :data="currentList"
       header-align="center"
       style="width: 100%;"
       :span-method="arraySpanMethod"
+      :expand-row-keys="expands"
+      @row-click="selectExpand"
+      row-key="id"
     >
       <!-- 展开行 -->
-      <el-table-column type="expand">
+      <el-table-column type="expand" width="1" style="font-size:0;
+        overflow: hidden;">
         <template slot-scope="scope">
           <el-row type="flex" class="sale">
             <el-col :span="6">低价推荐</el-col>
@@ -65,11 +69,22 @@
         <template slot-scope="scope">
           <div class="price">
             &yen;
-            <span>{{scope.row.base_price}}{{scope.row.plane_size}}</span>起
+            <span>{{scope.row.base_price/2}}{{scope.row.plane_size}}</span>起
           </div>
         </template>
       </el-table-column>
     </el-table>
+
+    <!-- 分页 -->
+    <el-pagination
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="pageNum"
+      :page-sizes="[5, 10, 15, 20]"
+      :page-size="5"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="total"
+    ></el-pagination>
   </div>
 </template>
 
@@ -78,19 +93,51 @@ export default {
   props: ["resdata"],
   data() {
     return {
-      ticket: []
+      // 机票列表
+      ticket: [],
+      // 当前显示列表
+      currentList: [],
+      // 展开行
+      expands: [],
+      pageSize: 5,
+      pageNum: 1,
+      total: 0
     };
   },
   watch: {
     resdata(newvalue, old) {
-      console.log(newvalue, old);
-      this.ticket=newvalue
+      this.ticket = newvalue;
+      this.currentList=this.ticket.slice(0,this.pageSize)
     }
   },
   mounted() {
     this.ticket = this.resdata;
+    this.total = this.ticket.length;
+    this.currentList=this.ticket.slice(0,this.pageSize)
+    console.log(this.currentList)
+    console.log(this.ticket);
   },
   methods: {
+    // 分页操作
+    handleSizeChange(val) {
+      console.log(`每页 ${val} 条`);
+      this.pageSize=val
+      this.currentList=this.ticket.slice(0,this.pageSize)
+    },
+    handleCurrentChange(val) {
+      this.pageNum = val;
+      this.currentList = this.ticket.slice(
+        (this.pageNum - 1) * this.pageSize,
+        this.pageNum * this.pageSize
+      );
+      
+    },
+
+    // 展开行
+    selectExpand(row, column, event) {
+      this.expands = [];
+      this.expands.push(row.id);
+    },
     // 合并列
     arraySpanMethod({ row, column, rowIndex, columnIndex }) {
       if (columnIndex === 2) {
@@ -141,6 +188,11 @@ export default {
 
 <style lang="less" scoped>
 .ticket {
+  /deep/ .el-table__row {
+    cursor: pointer;
+    margin-top: 10px;
+    border: 1px solid #eee;
+  }
   .startTime,
   .arriveTime {
     text-align: center;
@@ -204,5 +256,9 @@ export default {
 }
 /deep/ .el-table__expanded-cell {
   padding: 0;
+}
+
+/deep/ .el-table td {
+  overflow: hidden;
 }
 </style>

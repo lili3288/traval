@@ -5,12 +5,16 @@
       <span>特价机票</span>
     </div>
     <el-row type="flex" class="ticket">
-      <div class="content" v-for="(item,index) in ticket" :key="index">
-        <img :src="item.cover"/>
-        <div class="text">
-          <span>{{item.departCity}}-{{item.destCity}}</span>
-          <i>&yen;{{item.price}}</i>
-        </div>
+      <div class="content" v-for="(item,index) in ticket" :key="index" @click="toSearch(item)">
+        <nuxt-link
+          :to="`/air/flights?departCity=${item.departCity}&departCode=${item.departCode}&destCity=${item.destCity}&destCode=${item.destCode}&departDate=${item.departDate}`"
+        >
+          <img :src="item.cover" />
+          <div class="text">
+            <span>{{item.departCity}}-{{item.destCity}}</span>
+            <i>&yen;{{item.price}}</i>
+          </div>
+        </nuxt-link>
       </div>
     </el-row>
   </div>
@@ -32,13 +36,22 @@ export default {
         this.ticket = res.data.data;
       }
     });
+  },
+  methods: {
+    toSearch(item) {
+      const { cover, price, ...data } = item;
+      this.$store.commit("air/getCityInfo", [
+        ...this.$store.state.air.cityInfo,
+        data
+      ]);
+    }
   }
 };
 </script>
 
 <style lang="less" scoped>
 .sale {
-    margin-bottom: 50px;
+  margin-bottom: 50px;
   .title {
     color: #409eff;
     font-size: 20px;

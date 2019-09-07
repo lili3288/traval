@@ -4,16 +4,16 @@
 
     <el-row type="flex" class="ensure">
         <div>
-          <i class="el-icon-share"></i>
+          <i class="iconfont iconweibiaoti-_huabanfuben" style="color:#409EFF"></i>
           <span>100%航协认证</span>
         </div>
         <div>
-          <i class="el-icon-share"></i>
-          <span>100%航协认证</span>
+          <i class="iconfont iconbaozheng" style="color:green"></i>
+          <span>出行保证</span>
         </div>
         <div>
-          <i class="el-icon-share"></i>
-          <span>100%航协认证</span>
+          <i class="iconfont icondianhua"></i>
+          <span>7x24小时服务</span>
         </div>
     </el-row>
 
@@ -49,6 +49,12 @@ export default {
       border-right: 1px solid #ddd;
       &:nth-child(3){
         border-right: 0;
+        i{
+          color: #409EFF;
+        }
+      }
+      i{
+        font-size: 30px;
       }
     }
   }

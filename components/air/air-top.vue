@@ -108,10 +108,11 @@ export default {
           let data = res.data.data;
 
           data.forEach(e => {
-           e.value = e.name.replace('市','');
-         
+            e.value = e.name.replace("市", "");
           });
           this.startCity = data;
+          this.tikect.departCity = data[0].value;
+          this.tikect.departCode = data[0].sort;
           cb(data);
         }
       });
@@ -124,17 +125,17 @@ export default {
           // 得到匹配到的城市列表
           let data = res.data.data;
           data.forEach(e => {
-           
-            e.value = e.name.replace('市','');
+            e.value = e.name.replace("市", "");
           });
           this.arrivetCity = data;
+          this.tikect.depardestCitytCity = data[0].value;
+          this.tikect.destCode = data[0].sort;
           cb(data);
         }
       });
     },
     // 选择出发城市
     handlecity(data) {
-      console.log(123, data);
       this.tikect.departCode = data.sort;
     },
     // 选择到达城市
@@ -152,23 +153,31 @@ export default {
     },
     // 搜索机票
     searchTicket() {
-      console.log(this.tikect);
       this.$refs.ruleForm.validate(valid => {
+        if (this.tikect.departDate === "") {
+          this.$message.info("日期不能为空");
+          return;
+        }
+        if (this.tikect.destCode === "" || this.tikect.departCode === "") {
+          this.$message.info("出发或到达城市不存在，请在下拉列表选择城市");
+          return
+        }
         if (valid) {
-          console.log(typeof this.tikect.departDate);
           this.$axios({
             url: "/airs",
             params: this.tikect
           }).then(res => {
-            console.log(res);
+            if (res.request.status === 200) {
+              this.$store.commit("air/getCityInfo", [
+                ...this.$store.state.air.cityInfo,
+                this.tikect
+              ]);
+              // console.log(this.$store.state.air)
+              this.$router.push({ path: "/air/flights", query: this.tikect });
+            }
           });
-          if (this.tikect.destCode === "" || this.tikect.departCode === "") {
-            this.$message.info("出发或到达城市不存在，请在下拉列表选择城市");
-            return;
-          }
-          this.$router.push({ path: "/air/flights", query: this.tikect });
         } else {
-          this.$message.info("请正确填写必填项");
+          this.$message.info('请正确填写表单')
         }
       });
     }
