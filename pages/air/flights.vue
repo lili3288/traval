@@ -21,12 +21,17 @@
                   :value="item"
                 ></el-option>
               </el-select>
-              <el-select v-model="air.flightTimes" placeholder="起飞时间" size="mini">
+              <el-select
+                v-model="air.flightTimes"
+                placeholder="起飞时间"
+                size="mini"
+                @change="selectCompany"
+              >
                 <el-option
                   v-for="(item,index) in selectAir.flightTimes"
                   :key="index"
                   :label="item.from+':00-'+item.to+':00'"
-                  :value="index"
+                  :value="item.from+','+item.to"
                 ></el-option>
               </el-select>
               <el-select
@@ -161,33 +166,18 @@ export default {
     // 筛选机场
 
     // 筛选航空公司
-    // selectCompany(name) {
-    //   console.log(this.air.company);
-
-    //   let arr = [];
-    //   this.airTicket.forEach(e => {
-    //     if (e.airline_name === name) {
-    //       arr.push(e);
-    //     }
-    //   });
-    //   console.log(this.airTicket);
-    //   console.log(arr);
-    //   this.sonlist = arr;
-    //   console.log(this.airTicket);
-    // }
-    // 筛选航空公司
     selectCompany() {
       const { airport, flightTimes, company, volume } = this.air;
-      // airport: "",
-      // flightTimes: "",
-      // company: "",
-      // volume: ""
+      const [from, to] = flightTimes.split(",");
       let arr = [];
       this.airTicket.forEach(e => {
         if (e.airline_name === company || company === "") {
           if (e.org_airport_name === airport || airport === "") {
             if (e.plane_size === volume || volume === "") {
-              arr.push(e);
+              const current = e.dep_time.split(":")[0];
+              if ((+from <= current && current < +to) || flightTimes === "") {
+                arr.push(e);
+              }
             }
           }
         }
@@ -201,7 +191,7 @@ export default {
         flightTimes: "",
         company: "",
         volume: ""
-      }
+      };
       this.sonlist = this.airTicket;
     }
   }

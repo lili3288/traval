@@ -12,7 +12,7 @@
       </div>
       <el-button slot="reference">{{item.type}}</el-button>
     </el-popover>-->
-    <el-row type="flex">
+    <el-row type="flex" :gutter="50">
       <!-- 左侧 -->
       <el-col :span="6">
         <!-- 推荐城市列表 -->
@@ -40,13 +40,15 @@
       </el-col>
       <!-- 右侧 -->
       <el-col :span="18">
-        <list></list>
+        <search></search>
+        <list/>
       </el-col>
     </el-row>
   </div>
 </template>
 
 <script>
+import search from '@/components/post/search'
 import list from '@/components/post/list'
 export default {
   data() {
@@ -56,7 +58,7 @@ export default {
     };
   },
   components:{
-    list
+    search,list
   },
   mounted() {
     // 获取推荐

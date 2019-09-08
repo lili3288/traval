@@ -28,7 +28,7 @@
                 </div>
                 <i class="middle">&yen;{{item.par_price}}</i>
                 <div class="select">
-                  <span @click="comfirmAri(item.ota_id,item.seat_xid)">选定</span>
+                  <span @click="comfirmAri(scope.row.id,item.seat_xid)">选定</span>
                   <p>剩余：{{item.discount}}</p>
                 </div>
               </el-row>
@@ -114,13 +114,11 @@ export default {
     this.ticket = this.resdata;
     this.total = this.ticket.length;
     this.currentList = this.ticket.slice(0, this.pageSize);
-    console.log(this.currentList);
-    console.log(this.ticket);
+
   },
   methods: {
     // 分页操作
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
       this.pageSize = val;
       this.currentList = this.ticket.slice(0, this.pageSize);
     },
@@ -183,7 +181,6 @@ export default {
       }
       let minute = time % 60;
       let hour = Math.floor(time / 60);
-      console.log(time, minute, hour);
       return hour + "时" + minute + "分";
     }
   }

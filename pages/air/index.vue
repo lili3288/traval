@@ -23,7 +23,7 @@
 
 <script>
 import airtop from "@/components/air/air-top";
-import sale from "@/components/air/sale";
+import sale from "@/components/air/air-sale";
 export default {
   components: {
     airtop,sale

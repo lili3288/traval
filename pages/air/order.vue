@@ -128,7 +128,7 @@ export default {
       url: `/airs/${query.id}`,
       params: { seat_xid: query.seat_xid }
     }).then(res => {
-      console.log('详情', res.data);
+      // console.log('详情', res.data);
       if (res.request.status === 200) {
         this.ticketInfo = res.data;
       }
