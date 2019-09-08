@@ -107,22 +107,22 @@ export default {
   watch: {
     resdata(newvalue, old) {
       this.ticket = newvalue;
-      this.currentList=this.ticket.slice(0,this.pageSize)
+      this.currentList = this.ticket.slice(0, this.pageSize);
     }
   },
   mounted() {
     this.ticket = this.resdata;
     this.total = this.ticket.length;
-    this.currentList=this.ticket.slice(0,this.pageSize)
-    console.log(this.currentList)
+    this.currentList = this.ticket.slice(0, this.pageSize);
+    console.log(this.currentList);
     console.log(this.ticket);
   },
   methods: {
     // 分页操作
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
-      this.pageSize=val
-      this.currentList=this.ticket.slice(0,this.pageSize)
+      this.pageSize = val;
+      this.currentList = this.ticket.slice(0, this.pageSize);
     },
     handleCurrentChange(val) {
       this.pageNum = val;
@@ -130,7 +130,6 @@ export default {
         (this.pageNum - 1) * this.pageSize,
         this.pageNum * this.pageSize
       );
-      
     },
 
     // 展开行
@@ -178,8 +177,13 @@ export default {
       let time1 = new Date(data.arr_datetime).getTime();
       let time2 = new Date(data.dep_datetime).getTime();
       let time = (time1 - time2) / 1000 / 60;
+      // 数据可能有问题，传回来的隔天达的时间是日期是同一天，在此判断，可能有bug
+      if (time < 0) {
+        time = time + 24 * 60;
+      }
       let minute = time % 60;
       let hour = Math.floor(time / 60);
+      console.log(time, minute, hour);
       return hour + "时" + minute + "分";
     }
   }
