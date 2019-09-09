@@ -2,7 +2,9 @@
   <div class="list">
     <el-row type="flex" class="top" justify="space-between">
       <div class="left">推荐攻略</div>
-      <el-button type="primary" icon="el-icon-edit">写游记</el-button>
+      <nuxt-link to="/post/create">
+        <el-button type="primary" icon="el-icon-edit">写游记</el-button>
+      </nuxt-link>
     </el-row>
     <div class="composition">
       <div

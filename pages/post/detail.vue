@@ -1,7 +1,7 @@
 <template>
   <!-- 文章详情页 -->
   <div class="datail">
-    <el-row type="flex">
+    <el-row type="flex" justify="space-between">
       <!-- 左侧 -->
       <div class="left">
         <!-- 面包屑导航 -->
@@ -57,17 +57,20 @@
           </el-row>
         </div>
         <!-- 评论列表 -->
-      <comments :comList="commentsList"></comments>
+        <comments :comList="commentsList"></comments>
       </div>
       <!-- 右侧 -->
-      <div class="right"></div>
+      <div class="right">
+        <about />
+      </div>
     </el-row>
   </div>
 </template>
 
 <script>
 import moment from "moment";
-import comments from '@/components/post/detail-comments'
+import comments from "@/components/post/detail-comments";
+import about from "@/components/post/detail-about";
 export default {
   data() {
     return {
@@ -91,6 +94,26 @@ export default {
     };
   },
   methods: {
+    init() {
+      const id = this.$route.query.id;
+      this.getcomments.post = id;
+      // 获取文章详情
+      this.$axios({
+        url: "/posts",
+        params: { id }
+      }).then(res => {
+        this.post = res.data.data[0];
+      });
+      // 获取评论
+      this.$axios({
+        url: "/posts/comments",
+        params: this.getcomments
+      }).then(res => {
+        if (res.request.status === 200) {
+          this.commentsList = res.data.data;
+        }
+      });
+    },
     // 图片上传事件
     handleRemove(file, fileList) {
       console.log(file, fileList);
@@ -101,25 +124,7 @@ export default {
     }
   },
   mounted() {
-    const id = this.$route.query.id;
-    this.getcomments.post = id;
-    // 获取文章详情
-    this.$axios({
-      url: "/posts",
-      params: { id }
-    }).then(res => {
-      this.post = res.data.data[0];
-    });
-    // 获取评论
-    this.$axios({
-      url: "/posts/comments",
-      params: this.getcomments
-    }).then(res => {
-      if (res.request.status === 200) {
-        this.commentsList = res.data.data;
-       
-      }
-    });
+    this.init();
   },
   filters: {
     // 转换时间
@@ -132,8 +137,14 @@ export default {
       }
     }
   },
-  components:{
-    comments
+  components: {
+    comments,
+    about
+  },
+  watch: {
+    $route() {
+      this.init();
+    }
   }
 };
 </script>
@@ -206,7 +217,6 @@ export default {
         }
       }
     }
-  
   }
 }
 </style>
