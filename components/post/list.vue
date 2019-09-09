@@ -2,38 +2,44 @@
   <div class="list">
     <el-row type="flex" class="top" justify="space-between">
       <div class="left">推荐攻略</div>
-      <el-button type="primary">主要按钮</el-button>
+      <el-button type="primary" icon="el-icon-edit">写游记</el-button>
     </el-row>
     <div class="composition">
-      <div class="inlist" v-for="(item,index) in compositions" :key="index">
-        <!-- 标题 -->
-        <div class="title">{{item.title}}</div>
-        <!-- 摘要 -->
-        <div class="summary" v-html="item.summary" ></div>
-        <!-- 图片 -->
-        <el-row type="flex" class="photo" justify="space-between">
-          <div class="photo-list" v-for="(item,index) in item.images" :key="index">
-            <img
-              :src="item"
-              alt
-            />
-          </div>
-         
-        </el-row>
-        <el-row type="flex" class="read" justify="space-between">
+      <div
+        class="inlist"
+        v-for="(item,index) in compositions"
+        :key="index"
+        :class="{less:item.images.length<3}"
+      >
+        <nuxt-link :to="`/post/detail?id=${item.id}`">
+          <!-- 标题 -->
+          <div class="title" :class="{less:item.images.length<3}">{{item.title}}</div>
+          <!-- 摘要 -->
+          <div class="summary" v-html="item.summary" :class="{less:item.images.length<3}"></div>
+          <!-- 图片 -->
+          <el-row type="flex" class="photo" :class="{few:item.images.length<3}">
+            <div class="photo-list" v-for="(item,index) in item.images" :key="index">
+              <img :src="item" alt />
+            </div>
+          </el-row>
+        </nuxt-link>
+        <el-row
+          type="flex"
+          class="read"
+          justify="space-between"
+          :class="{less:item.images.length<3}"
+        >
           <div class="read-left">
             <i class="el-icon-location-outline"></i>
             {{item.cityName}}
             <span class="by">by</span>
-            <img
-              :src="`${$axios.defaults.baseURL}${item.account.defaultAvatar}`"
-              alt
-            />
+            <img :src="`${$axios.defaults.baseURL}${item.account.defaultAvatar}`" alt />
             <span class="nickname">{{item.account.nickname}}</span>
             <i class="el-icon-view"></i>
             {{item.watch}}
           </div>
-          <div class="read-right">{{item.like}}
+          <div class="read-right">
+            {{item.like}}
             <span>赞</span>
           </div>
         </el-row>
@@ -60,7 +66,8 @@ export default {
       this.compositions = res.data.data;
       console.log(this.composition);
     });
-  }
+  },
+  methods: {}
 };
 </script>
 <style lang="less" scoped>
@@ -77,34 +84,57 @@ export default {
   // 列表
   .composition {
     .inlist {
+      position: relative;
       border-bottom: 1px solid skyblue;
       padding: 20px 0;
       .title {
         font-size: 18px;
         color: #333;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        cursor: pointer;
+        &:hover {
+          color: orange;
+        }
       }
       .summary {
         height: 58px;
         overflow: hidden;
-        margin: 10px 0;
+        margin: 20px 0;
         color: #666;
         font-size: 14px;
+        cursor: pointer;
       }
       .photo {
         width: 100%;
+        overflow: hidden;
+        cursor: pointer;
         .photo-list {
-          
+          margin-right: 20px;
           img {
             width: 220px;
             height: 150px;
           }
         }
       }
+      // 图片少于3的时候
+      .few {
+        position: absolute;
+        left: 0;
+        top: 20px;
+        width: 220px;
+        height: 150px;
+        overflow: hidden;
+      }
+      .less {
+        // width: 70%;
+        padding-left: 33%;
+      }
       // 文章周边信息
       .read {
         margin-top: 10px;
         .read-left {
-   
           font-size: 12px;
           color: #999;
           img {
@@ -112,18 +142,19 @@ export default {
             height: 16px;
             vertical-align: middle;
           }
-          .by{
+          .by {
             margin: 0 5px;
           }
-          .nickname{
+          .nickname {
             color: orange;
             margin: 0 5px;
+            cursor: pointer;
           }
         }
         .read-right {
           color: orange;
           font-size: 16px;
-          span{
+          span {
             margin-left: 5px;
           }
         }
