@@ -14,10 +14,12 @@ export default {
         {
           name: "jack",
           age: 15,
+          data:{tt:1},
           children: [
             {
               name: "rose",
-              age: 15
+              age: 15,
+
             },
             {
               name: "john",

@@ -9,6 +9,10 @@ export const state = () => ({
   // destCode: "", //目标城市代码
   // departDate: "" //日期
 
+  // 总价格
+  totalPrice: 0,
+// 订单信息
+orderInfo:[]
 })
 export const mutations = {
   getCityInfo(state, data) {
@@ -27,6 +31,12 @@ export const mutations = {
       state.cityInfo = data
     }
 
+  },
+  getTotalPrice(state, data) {
+    state.totalPrice = data
+  },
+  getOrderInfo(state,data){
+    state.orderInfo=data
   }
 }
 export const actions = {}

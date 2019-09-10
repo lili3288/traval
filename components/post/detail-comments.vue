@@ -2,11 +2,12 @@
   <div class="com">
     <div class="comments">
       <div class="hide" v-if="comList.length===0">暂无评论,赶紧抢占沙发</div>
-      <div class="comments-item" v-for="(item,index) in comList" :key="index">
+      <div v-if="comList">
+        <div class="comments-item" v-for="(item,index) in comList" :key="index">
         <el-row type="flex" justify="space-between">
           <div class="left">
-            <img :src="$axios.defaults.baseURL+item.account.defaultAvatar" alt />
-            <span>{{item.account.nickname}}</span>
+            <!-- <img :src="$axios.defaults.baseURL+item.account.defaultAvatar" alt /> -->
+            <!-- <span>{{item.account.nickname}}</span> -->
             <i>{{item.created_at|time}}</i>
           </div>
           <div class="right">{{item.level}}</div>
@@ -14,6 +15,7 @@
         </el-row>
         <!-- <comments  v-if="item.parent" :comList="item.parent"></comments> -->
         <div class="main" v-html="item.content"></div>
+      </div>
       </div>
     </div>
     <el-pagination
@@ -33,13 +35,10 @@
 import { time } from "@/middleware/filter";
 export default {
   name: "comments",
-  props: {
-    comList: {
-      type: Array,
-      default: []
-    }
+  props: ['comList'],
+  mounted() {
+
   },
-  mounted() {},
   data() {
     return {
       total: 0,
@@ -62,6 +61,7 @@ export default {
   },
   watch: {
     comList(n, o) {
+ 
       this.list = n;
       console.log(this.list);
       this.total = this.list.length;
