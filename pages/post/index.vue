@@ -46,7 +46,7 @@ export default {
 .index {
   width: 1000px;
   margin: 0 auto;
-  margin-bottom: 500px;
+ 
   padding: 20px 0;
 }
 </style>

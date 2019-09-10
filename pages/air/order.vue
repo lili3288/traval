@@ -5,10 +5,19 @@
       <el-col :span="16" class="left">
         <el-form :model="order" ref="ruleForm" class="demo-ruleForm">
           <!-- 乘机人信息 -->
-          <div class="customer">
-            <p>乘机人</p>
+          <div class="plane">乘机人</div>
+          <div
+            class="customer"
+            v-for="(item,index) in customer"
+            :key="index"
+            :class="{active:index!==0}"
+          >
+            <div v-if="index!=0" class="delete" @click="delCustomer(index)">
+              <i class="el-icon-remove"></i>
+            </div>
+
             <el-form-item label="乘车人类型" prop="name">
-              <el-input placeholder="姓名" v-model="order.name" class="input-with-select">
+              <el-input placeholder="姓名" v-model="item.name" class="input-with-select">
                 <el-select
                   v-model="order.select"
                   slot="prepend"
@@ -20,7 +29,7 @@
               </el-input>
             </el-form-item>
             <el-form-item label="证件类型" prop="name">
-              <el-input placeholder="证件号码" v-model="order.name" class="input-with-select">
+              <el-input placeholder="证件号码" v-model="item.code" class="input-with-select">
                 <el-select
                   v-model="order.select"
                   slot="prepend"
@@ -34,7 +43,7 @@
             </el-form-item>
           </div>
           <!-- 添加乘机人 -->
-          <div class="add">
+          <div class="add" @click="addCustomer">
             <span>添加乘机人</span>
           </div>
           <!-- 保险 -->
@@ -92,7 +101,7 @@
             </el-row>
             <el-row type="flex" justify="space-between ">
               <span>成人机票</span>
-              <span>&yen;{{ticketInfo.base_price}}</span>
+              <span>&yen;{{ticketInfo.seat_infos.settle_price}}</span>
               <span>x1</span>
             </el-row>
             <el-row type="flex" justify="space-between ">
@@ -102,7 +111,7 @@
             </el-row>
             <el-row type="flex" justify="space-between " class="pay">
               <span>应付总额</span>
-              <span>&yen;{{ticketInfo.base_price+50}}</span>
+              <span>&yen;{{(ticketInfo.seat_infos.settle_price+50)*customer.length}}</span>
             </el-row>
           </div>
         </div>
@@ -118,8 +127,22 @@ export default {
       order: { name: "" },
 
       // 机票详情
-      ticketInfo: []
+      ticketInfo: {seat_infos:[]},
+      // 乘机人
+      customer: [{ name: "", code: "" }]
     };
+  },
+  methods: {
+    // 添加乘机人输入
+    addCustomer() {
+      this.customer.push({ name: "", code: "" });
+    },
+    // 移除乘机人输入
+    delCustomer(index) {
+      console.log(index);
+      this.customer.splice(index, 1);
+      console.log("移除", this.customer);
+    }
   },
   mounted() {
     // 获取机票信息
@@ -134,7 +157,7 @@ export default {
       }
     });
   },
-   filters: {
+  filters: {
     time(data) {
       let time1 = new Date(data.arr_datetime).getTime();
       let time2 = new Date(data.dep_datetime).getTime();
@@ -151,7 +174,11 @@ export default {
   width: 1000px;
   margin: 0 auto;
   .left {
-    .customer,
+     .plane {
+        margin: 20px 0;
+        font-size: 24px;
+      }
+   
     .safe,
     .contact {
       > p {
@@ -159,9 +186,24 @@ export default {
         font-size: 24px;
       }
     }
+    .active {
+      padding-right: 20px;
+    }
+    .customer {
+      position: relative;
+      border-bottom: 1px dashed #eee;
+      .delete {
+        width: 16px;
+        height: 16px;
+        position: absolute;
+        right: 0;
+        top: 50%;
+        margin-top: -8px;
+      }
+    }
+
     .add {
-      border-top: 1px dashed #999;
-      border-bottom: 1px dashed #999;
+      border-bottom: 1px dashed #eee;
       padding: 20px 0;
       > span {
         width: 110px;
@@ -176,8 +218,8 @@ export default {
       }
     }
     .contact {
-      border-top: 1px dashed #999;
-      border-bottom: 1px dashed #999;
+      border-top: 1px dashed #eee;
+      border-bottom: 1px dashed #eee;
       margin-bottom: 40px;
       > button {
         display: block;
@@ -228,8 +270,8 @@ export default {
         border-top: 1px dashed #666;
       }
       .pay {
-      height: 60px;
-      line-height: 40px;
+        height: 60px;
+        line-height: 40px;
         span {
           &:nth-child(2) {
             color: orange;

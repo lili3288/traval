@@ -81,7 +81,16 @@ export default {
     border-bottom: 1px solid #ddd;
     width: 700px;
     .left {
+      color: orange;
+      font-size: 18px;
+      position: relative;
+      
     }
+    // .left::after{
+    //     border-bottom: 1px solid orange;
+    //     position: absolute;
+    //     bottom: 0;
+    //   }
   }
   // 列表
   .composition {

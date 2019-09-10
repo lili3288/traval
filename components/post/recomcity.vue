@@ -119,7 +119,7 @@ export default {
         font-size: 12px;
         color: #999;
         span {
-          font-size: 30px;
+          font-size: 24px;
           color: orange;
         }
         i {
