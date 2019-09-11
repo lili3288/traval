@@ -43,7 +43,7 @@ export default {
   components: { commentson },
   mounted() {
     setTimeout(() => {
-      console.log(456, this.$store.state.post);
+      // console.log(456, this.$store.state.post);
       this.comList = this.$store.state.post.commentsList;
     }, 10);
   },
@@ -71,7 +71,7 @@ export default {
   watch: {
     comList(n, o) {
       this.list = n;
-      console.log(this.list);
+      // console.log(this.list);
       this.total = this.list.length;
     }
   }

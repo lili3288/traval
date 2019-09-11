@@ -26,7 +26,7 @@
                   <span>{{item.group_name}}</span>
                   |{{item.supplierName}}
                 </div>
-                <i class="middle">&yen;{{item.par_price}}</i>
+                <i class="middle">&yen;{{item.org_settle_price}}</i>
                 <div class="select">
                   <span @click="comfirmAri(scope.row.id,item.seat_xid)">选定</span>
                   <p>剩余：{{item.discount}}</p>

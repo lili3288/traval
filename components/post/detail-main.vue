@@ -19,7 +19,7 @@
         <i class="el-icon-edit-outline"></i>
         <p>评论({{post.comments.length}})</p>
       </div>
-      <div class="like-item">
+      <div class="like-item" @click="collectDetail">
         <i class="el-icon-star-off"></i>
         <p>收藏</p>
       </div>
@@ -27,7 +27,7 @@
         <i class="el-icon-share"></i>
         <p>分享</p>
       </div>
-      <div class="like-item">
+      <div class="like-item" @click="giveFive">
         <i class="iconfont iconding"></i>
         <p>点赞({{post.like|like}})</p>
       </div>
@@ -76,26 +76,31 @@ export default {
       commentsList: [],
       // 上传图片显示
       dialogVisible: false,
-      dialogImageUrl: ""
+      dialogImageUrl: "",
+      token:'',
+      id:''
     };
   },
   filters: {
     // 转换时间
     time,
     like(value) {
+      console.log(value);
       if (value === null) {
         return 0;
+      } else {
+        return value;
       }
     }
   },
   methods: {
     init() {
-      const id = this.$route.query.id;
-      this.getcomments.post = id;
+  
+      
       // 获取文章详情
       this.$axios({
         url: "/posts",
-        params: { id }
+        params: { id:this.id }
       }).then(res => {
         this.post = res.data.data[0];
       });
@@ -118,10 +123,45 @@ export default {
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url;
       this.dialogVisible = true;
+    },
+    // 点赞
+    giveFive() {
+   
+      this.$axios({
+        url: "/posts/like",
+        headers: {
+          Authorization: `Bearer ${this.token}`
+        },
+        params: { id:this.id }
+      }).then(res => {
+        if (res.request.status === 200) {
+          this.$message.success("点赞成功");
+        }
+      });
+    },
+    // 收藏文章
+    collectDetail() {
+      this.$axios({
+        url: "/posts/star",
+        headers: {
+          Authorization: `Bearer ${this.token}`
+        },
+        params: { id:this.id }
+      }).then(res => {
+        if (res.request.status === 200) {
+          this.$message.success("收藏成功");
+        }
+      });
     }
   },
   mounted() {
+      this.id  = this.$route.query.id;
+    
+     this.getcomments.post =this.id;
     this.init();
+    setTimeout(() => {
+       this.token = this.$store.state.user.userInfo.token;
+    }, 10);
   },
   watch: {
     $route() {

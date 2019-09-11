@@ -31,7 +31,7 @@ export default {
     }
   },
   mounted(){
-      console.log(this.comments)
+      // console.log(this.comments)
   },
   filters:{
       time

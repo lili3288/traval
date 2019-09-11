@@ -4,7 +4,7 @@
       <!-- 乘机人信息 -->
       <div class="plane">乘机人</div>
       <div class="customer" v-for="(item,index) in users" :key="index">
-        <div class="delete" @click="delCustomer(index)">
+        <div class="delete" @click="delCustomer(index)" v-if="index!==0">
           <i class="el-icon-remove"></i>
         </div>
 
@@ -57,7 +57,7 @@
       </div>
     </el-form>
     <!-- 引用激活计算总价格 -->
-    <div>{{allprice}}</div>
+    <div v-show="false">{{allprice}}</div>
   </div>
 </template>
 
@@ -89,7 +89,7 @@ export default {
   },
   computed: {
     allprice() {
-      console.log(123);
+      // console.log(123);
       if (!this.ticketInfo.seat_infos) {
         return 0;
       }
@@ -117,7 +117,7 @@ export default {
       if (res.request.status === 200) {
         this.ticketInfo = res.data;
         this.$store.commit("air/getOrderInfo", res.data);
-        console.log(this.ticketInfo);
+        // console.log(this.ticketInfo);
       }
     });
   },
@@ -153,13 +153,13 @@ export default {
         this.$message.warning("联系人电话不能为空");
         return;
       }
-      console.log(this.contactPhone);
+      // console.log(this.contactPhone);
       this.$axios({
         url: "/captchas",
         method: "POST",
         data: { tel: this.contactPhone }
       }).then(res => {
-        console.log(res);
+        // console.log(res);
         if (res.request.status === 200) {
           this.$message.success("手机验证码:" + res.data.code);
         }
@@ -218,11 +218,12 @@ export default {
       }).then(res => {
         if (res.request.status === 200) {
           this.$message.success(res.data.message);
-          console.log(res.data.id);
+          let id = res.data.data.id;
           this.$router.push({
             path: "/air/pay",
-            query: { id: res.data.id }
+            query: { id }
           });
+        
         }
       });
     }
@@ -258,12 +259,7 @@ export default {
       top: 50%;
       margin-top: -8px;
     }
-    &:first-child {
-      .delete {
-        display: none;
-        font-size: 60px;
-      }
-    }
+  
   }
 
   .add {
