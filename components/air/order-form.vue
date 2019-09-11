@@ -3,8 +3,8 @@
     <el-form :model="order" ref="ruleForm" class="demo-ruleForm">
       <!-- 乘机人信息 -->
       <div class="plane">乘机人</div>
-      <div class="customer" v-for="(item,index) in users" :key="index" :class="{active:index!==0}">
-        <div v-if="index!=0" class="delete" @click="delCustomer(index)">
+      <div class="customer" v-for="(item,index) in users" :key="index">
+        <div class="delete" @click="delCustomer(index)">
           <i class="el-icon-remove"></i>
         </div>
 
@@ -84,14 +84,14 @@ export default {
       invoice: false,
       seat_xid: "",
       air: "",
-      alllprice:0
+      alllprice: 0
     };
   },
   computed: {
     allprice() {
-      console.log(123)
-      if(!this.ticketInfo.seat_infos){
-        return 0
+      console.log(123);
+      if (!this.ticketInfo.seat_infos) {
+        return 0;
       }
       let price = 0;
       // 燃油加机票
@@ -100,9 +100,9 @@ export default {
         this.ticketInfo.seat_infos.org_settle_price +
         this.insurances.length * 30;
       // // 计算几个乘客
-      price*=this.users.length
-     this.$store.commit('air/getTotalPrice',price)
-      return price
+      price *= this.users.length;
+      this.$store.commit("air/getTotalPrice", price);
+      return price;
     }
   },
   mounted() {
@@ -218,11 +218,11 @@ export default {
       }).then(res => {
         if (res.request.status === 200) {
           this.$message.success(res.data.message);
-          console.log(res.data.id)
+          console.log(res.data.id);
           this.$router.push({
-            path:'/air/pay',
-            query:{id:res.data.id}
-          })
+            path: "/air/pay",
+            query: { id: res.data.id }
+          });
         }
       });
     }
@@ -244,19 +244,25 @@ export default {
       font-size: 24px;
     }
   }
-  .active {
-    padding-right: 20px;
-  }
+
   .customer {
     position: relative;
     border-bottom: 1px dashed #eee;
+    padding-right: 20px;
     .delete {
+      display: block;
       width: 16px;
       height: 16px;
       position: absolute;
       right: 0;
       top: 50%;
       margin-top: -8px;
+    }
+    &:first-child {
+      .delete {
+        display: none;
+        font-size: 60px;
+      }
     }
   }
 

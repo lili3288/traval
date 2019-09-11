@@ -4,16 +4,19 @@
       <div class="hide" v-if="comList.length===0">暂无评论,赶紧抢占沙发</div>
       <div v-if="comList">
         <div class="comments-item" v-for="(item,index) in comList" :key="index">
-        <el-row type="flex" justify="space-between">
+        <el-row type="flex" justify="space-between" style="padding-bottom:10px;">
           <div class="left">
-            <!-- <img :src="$axios.defaults.baseURL+item.account.defaultAvatar" alt /> -->
-            <!-- <span>{{item.account.nickname}}</span> -->
+            <img :src="$axios.defaults.baseURL+item.account.defaultAvatar" alt />
+            <span>{{item.account.nickname}}</span>
             <i>{{item.created_at|time}}</i>
           </div>
           <div class="right">{{item.level}}</div>
-          <div v-if="item.parent">{{item.parent.id}}</div>
+       
         </el-row>
-        <!-- <comments  v-if="item.parent" :comList="item.parent"></comments> -->
+        <!-- 子组件 -->
+       <div class="son" v-if="item.parent">
+         <commentson  :comments="item.parent"/>
+       </div>
         <div class="main" v-html="item.content"></div>
       </div>
       </div>
@@ -33,9 +36,11 @@
 
 <script>
 import { time } from "@/middleware/filter";
+import commentson from '@/components/post/detail-com-son'
 export default {
   name: "comments",
   props: ['comList'],
+  components:{commentson},
   mounted() {
 
   },
@@ -73,7 +78,7 @@ export default {
 <style lang="less" scoped>
 // 评论列表
 .comments {
-  border: 1px dashed #999;
+  border: 1px solid #ddd;
   .hide{
     padding: 20px 0;
     text-align: center;
@@ -82,8 +87,8 @@ export default {
   }
   .comments-item {
     font-size: 12px;
-    padding: 20px 20px 5px;
-    border-bottom: 1px dashed #999;
+    padding: 20px 20px 20px;
+    border-bottom: 1px dashed #ddd;
     &:last-child {
       border-bottom: 0;
     }
@@ -97,7 +102,11 @@ export default {
     }
     .main {
       padding-top: 10px;
+       padding-left: 30px;
     }
+  }
+  .son{
+    padding-left: 30px;
   }
 }
 </style>
