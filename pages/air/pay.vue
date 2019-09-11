@@ -3,12 +3,16 @@
     <div class="pay">
       <div class="top">
         支付总金额
-        <span>&yen;{{123}}</span>
+        <span>&nbsp;&yen; {{payInfo.price}}</span>
       </div>
       <div class="main">
         <div class="title">微信支付</div>
         <el-row type="flex" justify="space-between " class="payforweixin">
-          <div class="weixin">123</div>
+          <div class="weixin">
+            <canvas id="weixinPay"></canvas>
+            <p>请使用微信扫一扫</p>
+            <p>扫描二维码支付</p>
+          </div>
           <div class="demon">
             <img src="http://157.122.54.189:9093/images/wx-sweep2.jpg" alt />
           </div>
@@ -19,16 +23,19 @@
 </template>
 
 <script>
+import qrCode from "qrcode";
 export default {
   data() {
     return {
-        payInfo:{}
+      payInfo: {},
+      timer:''
     };
   },
   mounted() {
     setTimeout(() => {
       // 获取付款
       let id = this.$route.query.id;
+      console.log(123)
       this.$axios({
         url: "/airorders/" + id,
         headers: {
@@ -36,9 +43,36 @@ export default {
         }
       }).then(res => {
         console.log(res);
-        this.payInfo=res.data
+        this.payInfo = res.data;
+        let url = res.data.payInfo.code_url;
+        let state = document.querySelector("#weixinPay");
+        qrCode.toCanvas(state, url, {
+          width: 200
+        });
       });
-    }, 10);
+    }, 1000);
+    // 查询付款状态
+   this.timer=setInterval(()=>{
+      this.$axios({
+        url:'/airorders/checkpay',
+         headers: {
+          Authorization: `Bearer ${this.$store.state.user.userInfo.token}`
+        },
+        method:'POST',
+        data:{
+          id:this.payInfo.id,
+          nonce_str:this.payInfo.price,
+          out_trade_no:this.payInfo.orderNo
+        }
+      }).then(res=>{
+        console.log(res)
+        if(res.status===200){
+          if(res.data.statusTxt==='支付完成'){
+            clearInterval(this.timer)
+          }
+        }
+      })
+    },3000)
   }
 };
 </script>
@@ -58,7 +92,7 @@ export default {
       margin-bottom: 10px;
       span {
         font-size: 28px;
-        color: red;
+        color: #ff4500;
       }
     }
     .main {
@@ -70,6 +104,13 @@ export default {
       }
       .payforweixin {
         padding: 0 80px;
+        .weixin {
+          border: 1px solid #ddd;
+          padding: 20px;
+          height: fit-content;
+          text-align: center;
+          margin: auto 0;
+        }
       }
     }
   }

@@ -39,7 +39,8 @@
       <el-row type="flex" justify="space-between" class="upload">
         <!-- 上传图片 -->
         <el-upload
-          action="https://jsonplaceholder.typicode.com/posts/"
+          action="http:127.0.0.1:1337/upload"
+          :headers="{Authorization:token}"
           list-type="picture-card"
           :on-preview="handlePictureCardPreview"
           :on-remove="handleRemove"
@@ -66,19 +67,13 @@ export default {
       },
       // 发表评论
       comments: "",
-      // 获取评论列表参数
-      getcomments: {
-        post: "",
 
-        _limit: 10,
-        _start: 1
-      },
       commentsList: [],
       // 上传图片显示
       dialogVisible: false,
       dialogImageUrl: "",
-      token:'',
-      id:''
+      token: "",
+      id: ""
     };
   },
   filters: {
@@ -95,25 +90,12 @@ export default {
   },
   methods: {
     init() {
-  
-      
       // 获取文章详情
       this.$axios({
         url: "/posts",
-        params: { id:this.id }
+        params: { id: this.id }
       }).then(res => {
         this.post = res.data.data[0];
-      });
-      // 获取评论
-      this.$axios({
-        url: "/posts/comments",
-        params: this.getcomments
-      }).then(res => {
-        if (res.request.status === 200) {
-          this.commentsList = res.data.data;
-          console.log(this.commentsList);
-          this.$store.commit("post/getcommentsList", this.commentsList);
-        }
       });
     },
     // 图片上传事件
@@ -126,13 +108,12 @@ export default {
     },
     // 点赞
     giveFive() {
-   
       this.$axios({
         url: "/posts/like",
         headers: {
           Authorization: `Bearer ${this.token}`
         },
-        params: { id:this.id }
+        params: { id: this.id }
       }).then(res => {
         if (res.request.status === 200) {
           this.$message.success("点赞成功");
@@ -146,7 +127,7 @@ export default {
         headers: {
           Authorization: `Bearer ${this.token}`
         },
-        params: { id:this.id }
+        params: { id: this.id }
       }).then(res => {
         if (res.request.status === 200) {
           this.$message.success("收藏成功");
@@ -155,12 +136,11 @@ export default {
     }
   },
   mounted() {
-      this.id  = this.$route.query.id;
-    
-     this.getcomments.post =this.id;
+    this.id = this.$route.query.id;
+
     this.init();
     setTimeout(() => {
-       this.token = this.$store.state.user.userInfo.token;
+      this.token = this.$store.state.user.userInfo.token;
     }, 10);
   },
   watch: {
