@@ -1,18 +1,13 @@
 // 用户管理
 export const state = () => ({
     // 数据
-    userInfo: {
-      token: '',
-      username: {}
-    }
+    commentsList:[]
   })
   export const mutations = {
-    getUserInfo(state, data) {
-      state.userInfo = data
+    getcommentsList(state, data) {
+      state.commentsList = data
     },
-    clearUserInfo(state){
-      state.userInfo=''
-    }
+ 
   }
   export const actions = {}
   

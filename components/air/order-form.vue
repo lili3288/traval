@@ -57,7 +57,7 @@
       </div>
     </el-form>
     <!-- 引用激活计算总价格 -->
-    <!-- <div >{{allprice}}</div> -->
+    <div>{{allprice}}</div>
   </div>
 </template>
 

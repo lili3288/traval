@@ -46,7 +46,7 @@ export default {
             if (res.request.status === 200) {
               this.$store.commit("user/getUserInfo", res.data);
               this.$message.success("登陆成功");
-              this.$router.push({ path: "/" });
+              this.$router.back()
             }
           });
         } else {

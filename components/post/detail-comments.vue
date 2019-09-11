@@ -12,12 +12,12 @@
           </div>
           <div class="right">{{item.level}}</div>
        
-        </el-row>
-        <!-- 子组件 -->
-       <div class="son" v-if="item.parent">
+      </el-row>
+      <!-- 子组件 -->
+      <div class="son" v-if="item.parent">
          <commentson  :comments="item.parent"/>
        </div>
-        <div class="main" v-html="item.content"></div>
+      <div class="main" v-html="item.content"></div>
       </div>
       </div>
     </div>
@@ -36,16 +36,20 @@
 
 <script>
 import { time } from "@/middleware/filter";
-import commentson from '@/components/post/detail-com-son'
+import commentson from "@/components/post/detail-com-son";
 export default {
   name: "comments",
-  props: ['comList'],
-  components:{commentson},
-  mounted() {
 
+  components: { commentson },
+  mounted() {
+    setTimeout(() => {
+      console.log(456, this.$store.state.post);
+      this.comList = this.$store.state.post.commentsList;
+    }, 10);
   },
   data() {
     return {
+      comList: [],
       total: 0,
       list: [],
       pageSize: 5,
@@ -66,7 +70,6 @@ export default {
   },
   watch: {
     comList(n, o) {
- 
       this.list = n;
       console.log(this.list);
       this.total = this.list.length;
@@ -79,7 +82,7 @@ export default {
 // 评论列表
 .comments {
   border: 1px solid #ddd;
-  .hide{
+  .hide {
     padding: 20px 0;
     text-align: center;
     color: #999;
@@ -102,10 +105,10 @@ export default {
     }
     .main {
       padding-top: 10px;
-       padding-left: 30px;
+      padding-left: 30px;
     }
   }
-  .son{
+  .son {
     padding-left: 30px;
   }
 }

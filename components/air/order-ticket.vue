@@ -24,7 +24,7 @@
       </el-row>
       <el-row type="flex" justify="space-between ">
         <span>成人机票</span>
-        <span>&yen;{{ticketInfo.seat_infos.settle_price}}</span>
+        <span>&yen;{{ticketInfo.seat_infos.org_settle_price}}</span>
         <span>x1</span>
       </el-row>
       <el-row type="flex" justify="space-between ">
@@ -46,7 +46,7 @@ export default {
   mounted() {
     setTimeout(() => {
       this.ticketInfo = this.$store.state.air.orderInfo;
-    }, 10);
+    }, 100);
   },
   data() {
     return {
