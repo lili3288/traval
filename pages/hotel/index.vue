@@ -1,54 +1,26 @@
 <template>
-  <div class="d">
-    儿子：
-    <son :aa="son" />
+  <div class="hotel">
+    <!-- 头部搜索和区域展示 -->
+    <hoteltop/>
+    <!-- 展示酒店列表 -->
+    <hotelmain/>
   </div>
 </template>
 
 <script>
-import son from "@/pages/hotel/father";
+import hoteltop from "@/components/hotel/hotel-top";
+import hotelmain from "@/components/hotel/hotel-main";
 export default {
-  data() {
-    return {
-      son: [
-        {
-          name: "jack",
-          age: 15,
-          data:{tt:1},
-          children: [
-            {
-              name: "rose",
-              age: 15,
-
-            },
-            {
-              name: "john",
-              age: 15
-            }
-          ]
-        },
-        {
-          name: "tom",
-          age: 15,
-          children: [
-            {
-              name: "rose",
-              age: 15
-            },
-            {
-              name: "john",
-              age: 15
-            }
-          ]
-        }
-      ]
-    };
-  },
   components: {
-    son
+    hoteltop,hotelmain
   }
 };
 </script>
 
-<style>
+<style lang="less" scoped>
+.hotel{
+  padding: 20px 0;
+  width: 1000px;
+  margin: 0 auto;
+}
 </style>

@@ -39,15 +39,16 @@
       <el-row type="flex" justify="space-between" class="upload">
         <!-- 上传图片 -->
         <el-upload
-          action="http:127.0.0.1:1337/upload"
-          :headers="{Authorization:token}"
+          action="http://127.0.0.1:1337/upload"
           list-type="picture-card"
           :on-preview="handlePictureCardPreview"
           :on-remove="handleRemove"
+          :data="{files:'4'}"
+          :on-change="before"
         >
           <i class="el-icon-plus"></i>
         </el-upload>
-        <el-dialog :visible.sync="dialogVisible" style="width:100px;">
+        <el-dialog :visible.sync="dialogVisible">
           <img width="100%" :src="dialogImageUrl" alt />
         </el-dialog>
         <el-button type="primary" style="width:60px;height:30px;padding:0">提交</el-button>
@@ -105,6 +106,9 @@ export default {
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url;
       this.dialogVisible = true;
+    },
+    before(file, fileList) {
+      console.log("上传前", file, fileList);
     },
     // 点赞
     giveFive() {
