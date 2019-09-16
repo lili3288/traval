@@ -161,7 +161,7 @@ export default {
     // 酒店列表
     let id = this.$route.query.id;
     this.select.city = id;
-    console.log(this.select);
+    // console.log(this.select);
     this.$axios({
       url: "/hotels"
     }).then(res => {
@@ -169,18 +169,18 @@ export default {
         this.hotelList = res.data.data;
         let arr = [];
 
-        this.hotelList.forEach(e => {
+        this.hotelList.forEach((e, i) => {
           // console.log(e.location);
           let position = [];
-          position.push(e.location.longitude)
-          position.push(e.location.latitude)
+          position.push(e.location.longitude);
+          position.push(e.location.latitude);
           arr.push({
             position,
-            
-          })
+            icon: "<div class=\"demon\"> <img src=\"//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-default.png\" > <span>"+(i+1)+"</span></div>"
+          });
         });
-        // console.log(arr)
-        this.$store.commit('hotel/getlocalInfo',arr)
+        // console.log(arr);
+        this.$store.commit("hotel/getlocalInfo", arr);
       }
     });
 

@@ -87,7 +87,7 @@ export default {
   },
   watch: {
     "$store.state.hotel.localInfo"(n, o) {
-      this.markerList = n
+      this.markerList = n;
     }
   },
   mounted() {
@@ -100,14 +100,12 @@ export default {
       }).then(res => {
         if (res.request.status === 200) {
           this.cityAdress = res.data.data[0].scenics;
-        
-      
         }
       });
-      var markerList=this.markerList
-      console.log(markerList)
+      var markerList = this.markerList;
+      console.log(markerList);
 
-  var center=this.markerList[0].position
+      var center = this.markerList[0].position;
       // 高德地图
       window.onLoad = function() {
         var map = new AMap.Map("container", {
@@ -115,13 +113,13 @@ export default {
           zoom: 11, //级别
           center: center //中心点坐标
         });
-   
+
         var marker = [];
 
-       markerList.forEach(e => {
+        markerList.forEach(e => {
           new AMap.Marker({
             map: map,
-            icon: e.icon,
+            content: e.icon,
             position: [e.position[0], e.position[1]],
             offset: new AMap.Pixel(-13, -30)
           });
@@ -209,5 +207,19 @@ export default {
 /deep/ .amap-icon img {
   width: 30px;
   height: 50px;
+}
+/deep/ .demon {
+  position: relative;
+  img {
+    width: 25px;
+    height: 34px;
+  }
+  span{
+    position: absolute;
+    left: 50%;
+    margin-left: -5px;
+    top: 0;
+    color :#fff;
+  }
 }
 </style>
