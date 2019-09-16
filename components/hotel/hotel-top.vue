@@ -81,51 +81,67 @@ export default {
       item: "",
       item1: "",
       // 循环城市地址
-      cityAdress: []
+      cityAdress: [],
+      markerList: []
     };
   },
+  watch: {
+    "$store.state.hotel.localInfo"(n, o) {
+      this.markerList = n
+    }
+  },
   mounted() {
-    let id = this.$route.query.id;
+    setTimeout(() => {
+      let id = this.$route.query.id;
 
-    this.$axios({
-      url: "/cities",
-      params: { name: "南京" }
-    }).then(res => {
-      console.log(res);
-      if (res.request.status === 200) {
-        this.cityAdress = res.data.data[0].scenics;
-        console.log(this.cityAdress);
-      }
-    });
-    // 高德地图
-    window.onLoad = function() {
-      var map = new AMap.Map("container");
-      var marker = new AMap.Marker({
-        position: new AMap.LngLat(136.39, 49.9), // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
-        offset: new AMap.Pixel(-10, -10),
-        icon: "//vdata.amap.com/icons/b18/1/2.png",
-        title: "北京"
+      this.$axios({
+        url: "/cities",
+        params: { name: "南京" }
+      }).then(res => {
+        if (res.request.status === 200) {
+          this.cityAdress = res.data.data[0].scenics;
+        
+      
+        }
       });
+      var markerList=this.markerList
+      console.log(markerList)
 
-      // 将创建的点标记添加到已有的地图实例：
-      map.add(marker);
-      // 创建一个 Marker 实例：
-      // // 多个点实例组成的数组
-      // var markerList = [marker1, marker2, marker3];
+  var center=this.markerList[0].position
+      // 高德地图
+      window.onLoad = function() {
+        var map = new AMap.Map("container", {
+          resizeEnable: true,
+          zoom: 11, //级别
+          center: center //中心点坐标
+        });
+   
+        var marker = [];
 
-      // map.add(markerList);
-      var map = new AMap.Map("container", {
-        zoom: 11, //级别
-        center: [116.397428, 39.90923], //中心点坐标
-        viewMode: "3D" //使用3D视图
-      });
-    };
-    var url =
-      "https://webapi.amap.com/maps?v=1.4.15&key=17ea097313c08492c412329601d60414&callback=onLoad";
-    var jsapi = document.createElement("script");
-    jsapi.charset = "utf-8";
-    jsapi.src = url;
-    document.head.appendChild(jsapi);
+       markerList.forEach(e => {
+          new AMap.Marker({
+            map: map,
+            icon: e.icon,
+            position: [e.position[0], e.position[1]],
+            offset: new AMap.Pixel(-13, -30)
+          });
+        });
+
+        // 将创建的点标记添加到已有的地图实例：
+        map.add(marker);
+        // 创建一个 Marker 实例：
+        // // 多个点实例组成的数组
+        // var markerList = [marker1, marker2, marker3];
+
+        // map.add(markerList);
+      };
+      var url =
+        "https://webapi.amap.com/maps?v=1.4.15&key=17ea097313c08492c412329601d60414&callback=onLoad";
+      var jsapi = document.createElement("script");
+      jsapi.charset = "utf-8";
+      jsapi.src = url;
+      document.head.appendChild(jsapi);
+    }, 10);
   },
   methods: {
     // 搜索城市
@@ -184,10 +200,14 @@ export default {
     .right {
       width: 40%;
       #container {
-        width: 420px;
+        width: 400px;
         height: 260px;
       }
     }
   }
+}
+/deep/ .amap-icon img {
+  width: 30px;
+  height: 50px;
 }
 </style>
